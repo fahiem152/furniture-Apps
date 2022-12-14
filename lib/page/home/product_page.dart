@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furniture/providers/product_provider.dart';
+import 'package:furniture/theme.dart';
 import 'package:furniture/widgets/card_product.dart';
 import 'package:provider/provider.dart';
 
@@ -14,24 +15,47 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     ProductProvider productProvider = Provider.of<ProductProvider>(context);
-    print('Jumlah Product: ${productProvider.products.length}');
+    // print('Jumlah Product: ${productProvider.products.length}');
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.all(
         24,
       ),
-      child: GridViewCount(),
+      child: Stack(
+        children: [
+          productProvider.products.length == 0
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : GridViewCount(),
+          // GridViewCount(),
+          Align(
+            alignment: Alignment.topRight,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/addproduct');
+              },
+              child: Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    12,
+                  ),
+                  color: color4,
+                ),
+                child: Text(
+                  'Add Product',
+                  style: textColor1.copyWith(
+                    fontSize: 20,
+                    fontWeight: medium,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
-    // return LayoutBuilder(
-    //     builder: (BuildContext context, BoxConstraints constraints) {
-    //   return Container(
-    //     width: MediaQuery.of(context).size.width,
-    //     margin: EdgeInsets.all(
-    //       24,
-    //     ),
-    //     child: GridViewCount(),
-    //   );
-    // });
   }
 }
 

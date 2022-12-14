@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furniture/page/add_product.dart';
 
 import 'package:furniture/page/home/main_page.dart';
 
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => SplahPage(),
           '/main': (context) => MainPage(),
+          '/addproduct': (context) => AddProduct(),
         },
       ),
     );

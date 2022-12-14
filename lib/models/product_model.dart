@@ -12,7 +12,7 @@ class ProductModel {
   DateTime? createdAt;
   DateTime? updatedAt;
   CategoryModel? category;
-  // BrandModel? brand;
+  BrandModel? brand;
 
   ProductModel({
     this.id,
@@ -23,7 +23,7 @@ class ProductModel {
     this.createdAt,
     this.updatedAt,
     this.category,
-    // this.brand,
+    this.brand,
   });
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -34,7 +34,7 @@ class ProductModel {
     createdAt = DateTime.tryParse(json['created_at']);
     updatedAt = DateTime.tryParse(json['updatedAt']);
     category = CategoryModel.fromJson(json['category']);
-    // brand = BrandModel.fromJson(json['brand']);
+    brand = BrandModel.fromJson(json['brand']);
   }
 
   Map<String, dynamic> toJson() {
@@ -45,8 +45,8 @@ class ProductModel {
       'price': price,
       'created_at': createdAt.toString(),
       'updatedAt': updatedAt.toString(),
-      'category': category?.toJson(),
-      // 'brand': brand?.toJson()
+      'category': category!.toJson(),
+      'brand': brand!.toJson()
     };
   }
 }

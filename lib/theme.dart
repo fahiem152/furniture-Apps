@@ -17,3 +17,4 @@ Color color4 = Colors.green;
 TextStyle textColor1 = GoogleFonts.poppins(color: color1);
 TextStyle textColor2 = GoogleFonts.poppins(color: color2);
 TextStyle textColor3 = GoogleFonts.poppins(color: color3);
+TextStyle textColor4 = GoogleFonts.poppins(color: color4);

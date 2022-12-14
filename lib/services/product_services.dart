@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:furniture/models/product_model.dart';
+import 'package:furniture/services/api_services.dart';
 import 'package:http/http.dart' as http;
 
 class ProductService {
-  String baseUrl = 'https://8c07-103-105-28-175.ap.ngrok.io/api';
-
   // String baseUrl = 'http://localhost:8000/api';
 
   Future<List<ProductModel>> getProducts() async {
@@ -16,27 +15,50 @@ class ProductService {
       Uri.parse(url),
     );
 
-    print('ini adalah response body Product: ${response.body}');
+    // print('ini adalah response body Product: ${response.body}');
 
     List data = jsonDecode(response.body)['data'];
-    print('ini adalah List Data $data');
+    print('ini adalah List Data Product $data');
     List<ProductModel> products = [];
     for (var item in data) {
       products.add(ProductModel.fromJson(item));
     }
 
-    print('ini get data products $products');
+    // print('ini get data products $products');
     return products;
-    // if (response.statusCode == 200) {
-    //   List data = jsonDecode(response.body)['data'];
-    //   List<ProductModel> products = [];
-    //   for (var item in data) {
-    //     products.add(ProductModel.fromJson(item));
-    //   }
-    //   print('get data products $products');
-    //   return products;
-    // } else {
-    //   throw Exception('Gagal Get Products!');
-    // }
+  }
+
+  Future<ProductModel> addProduct(
+    String name,
+    String description,
+    int price,
+    String urlImage,
+    int categoryId,
+    int brandId,
+  ) async {
+    var url = '$baseUrl/product';
+    // var headers = {'Content-Type': 'application/json'};
+
+    var body = jsonEncode({
+      'name': name,
+      'description': description,
+      'price': price,
+      'urlImage': urlImage,
+      'category_id': categoryId,
+      'brand_id': brandId,
+    });
+    var response = await http.post(
+      Uri.parse(url),
+      body: body,
+    );
+    print('ini adalah response post: ${response.body}');
+    // final result = json.decode(response.body);
+    // print('Ini adalaha hasil result: $result');
+
+    final data = json.decode(response.body)['data'];
+    ProductModel product = ProductModel.fromJson(data);
+    print('ini adalah data: $data');
+    print('ini adalah product: $product');
+    return product;
   }
 }

@@ -20,10 +20,16 @@ class _SplahPageState extends State<SplahPage> {
     super.initState();
   }
 
+//  @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     getProvince(); //Ketika pertama kali membuka home screen makan method ini dijalankan untuk pertama kalinya juga
+//   }
   getInt() async {
+    await Provider.of<BrandProvider>(context, listen: false).getBrands();
+    await Provider.of<CategoryProvider>(context, listen: false).geCategorys();
     await Provider.of<ProductProvider>(context, listen: false).getProducts();
-    // await Provider.of<CategoryProvider>(context, listen: false).geCategorys();
-    // await Provider.of<BrandProvider>(context, listen: false).getBrands();
     Navigator.pushNamed(context, '/main');
   }
 

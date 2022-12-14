@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:furniture/models/brand_model.dart';
 import 'package:furniture/models/category_model.dart';
+import 'package:furniture/services/api_services.dart';
 
 import 'package:http/http.dart' as http;
 
 class BrandService {
-  String baseUrl = 'https://8c07-103-105-28-175.ap.ngrok.io/api';
+  // String baseUrl = 'https://8c07-103-105-28-175.ap.ngrok.io/api';
 
   // String baseUrl = 'http://localhost:8000/api';
 
@@ -18,16 +19,16 @@ class BrandService {
       Uri.parse(url),
     );
 
-    print('ini adalah response body Brand: ${response.body}');
+    // print('ini adalah response body Brand: ${response.body}');
 
     List data = jsonDecode(response.body)['data'];
-    print('ini adalah List Data $data');
+    print('ini adalah List Data Brand $data');
     List<BrandModel> brands = [];
     for (var item in data) {
       brands.add(BrandModel.fromJson(item));
     }
 
-    print('ini get data brands $brands');
+    // print('ini get data brands $brands');
     return brands;
   }
 }
