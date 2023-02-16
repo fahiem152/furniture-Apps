@@ -1,1 +1,4 @@
-const baseUrl = "https://cdc4-103-105-28-146.ap.ngrok.io/api";
+const baseUrl = "https://6630-103-105-35-124.ap.ngrok.io";
+const serverError = 'Server Error';
+const unauthorized = 'unauthorized';
+const somethingWhentWrong = 'somethingWhentWrong';

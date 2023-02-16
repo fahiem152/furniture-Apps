@@ -1,34 +1,44 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:furniture/models/brand_model.dart';
 import 'package:furniture/models/category_model.dart';
 import 'package:furniture/services/api_services.dart';
+import 'package:furniture/services/storage_service.dart';
 
 import 'package:http/http.dart' as http;
 
 class BrandService {
-  // String baseUrl = 'https://8c07-103-105-28-175.ap.ngrok.io/api';
-
-  // String baseUrl = 'http://localhost:8000/api';
+  final String _baseUrl = '$baseUrl/api/brands';
 
   Future<List<BrandModel>> getBrands() async {
-    var url = '$baseUrl/brand';
-    // var headers = {'Content-Type': 'application/json'};
+    String token = await getToken();
 
-    var response = await http.get(
-      Uri.parse(url),
+    final response = await http.get(
+      Uri.parse(_baseUrl),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        'Authorization': 'Bearer $token',
+      },
     );
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body)['data'];
+      print('ini adalah List Data Brand ${data}');
+      return data.map<BrandModel>((json) => BrandModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load data');
+    }
 
     // print('ini adalah response body Brand: ${response.body}');
 
-    List data = jsonDecode(response.body)['data'];
-    print('ini adalah List Data Brand $data');
-    List<BrandModel> brands = [];
-    for (var item in data) {
-      brands.add(BrandModel.fromJson(item));
-    }
+    // List data = jsonDecode(response.body)['data'];
+    // print('ini adalah List Data Brand $data');
+    // List<BrandModel> brands = [];
+    // for (var item in data) {
+    //   brands.add(BrandModel.fromJson(item));
+    // }
 
-    // print('ini get data brands $brands');
-    return brands;
+    // // print('ini get data brands $brands');
+    // return brands;
   }
 }

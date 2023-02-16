@@ -9,15 +9,16 @@ class BrandProvider with ChangeNotifier {
 
   List<BrandModel> get brands => _brands;
 
-  set brands(List<BrandModel> brands) {
-    _brands = brands;
-    notifyListeners();
-  }
+  // set brands(List<BrandModel> brands) {
+  //   _brands = brands;
+  //   notifyListeners();
+  // }
 
   Future<void> getBrands() async {
     try {
-      List<BrandModel> brands = await BrandService().getBrands();
-      _brands = brands;
+      final brandService = BrandService();
+      _brands = await brandService.getBrands();
+      notifyListeners();
     } catch (e) {
       print(e);
     }

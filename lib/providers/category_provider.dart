@@ -7,15 +7,16 @@ class CategoryProvider with ChangeNotifier {
 
   List<CategoryModel> get categorys => _categorys;
 
-  set categorys(List<CategoryModel> categorys) {
-    _categorys = categorys;
-    notifyListeners();
-  }
+  // set categorys(List<CategoryModel> categorys) {
+  //   _categorys = categorys;
+  //   notifyListeners();
+  // }
 
   Future<void> geCategorys() async {
     try {
-      List<CategoryModel> categorys = await CategoryService().getCategorys();
-      _categorys = categorys;
+      final categoryService = CategoryService();
+      _categorys = await categoryService.getCategorys();
+      notifyListeners();
     } catch (e) {
       print(e);
     }
