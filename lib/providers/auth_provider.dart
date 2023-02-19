@@ -4,6 +4,14 @@ import 'package:furniture/services/auth_service.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
+  int? _valueRole;
+  int? get valueRole => _valueRole;
+
+  void setValueRole(int? newValue) {
+    _valueRole = newValue;
+    notifyListeners();
+  }
+
   Future<LoginResponeModel> login(
     String email,
     String password,

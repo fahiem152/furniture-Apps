@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Provider.of<RoleProvider>(context, listen: false).fetchRole();
   }
 
-  var valueRole;
+  // var valueRole;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final loginResponse = await authProvider.login(
           emailController.text,
           passwordController.text,
-          int.parse(valueRole),
+          authProvider.valueRole!,
         );
         if (loginResponse != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -47,13 +47,13 @@ class _LoginScreenState extends State<LoginScreen> {
               content: Text('Login Success'),
             ),
           );
-          if (valueRole == '1') {
+          if (authProvider.valueRole == 1) {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/admin', (route) => false);
-          } else if (valueRole == '2') {
+          } else if (authProvider.valueRole == 2) {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/kurir', (route) => false);
-          } else if (valueRole == '3') {
+          } else if (authProvider.valueRole == 3) {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/owner', (route) => false);
           }
@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     final roleList = Provider.of<RoleProvider>(context).roles;
-    var selectedRole = Provider.of<RoleProvider>(context).selectedRole;
+    // var selectedRole = Provider.of<RoleProvider>(context).selectedRole;
 
     print('Jumlah Roles: ${roleList.length}');
     return Scaffold(
@@ -264,17 +264,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hint: Text('Select Role'),
                                   items: roleList
                                       .map((item) => DropdownMenuItem(
-                                            value: item.id.toString(),
+                                            value: item.id,
                                             child: Text(item.name),
                                           ))
                                       .toList(),
                                   onChanged: (newValue) {
-                                    setState(() {
-                                      valueRole = newValue;
-                                      print(valueRole);
-                                    });
+                                    authProvider.setValueRole(
+                                        int.parse(newValue.toString()));
+                                    print(authProvider.valueRole.toString());
+                                    // setState(() {
+                                    //   valueRole = newValue;
+                                    //   print(valueRole);
+                                    // });
                                   },
-                                  value: valueRole,
+                                  value: authProvider.valueRole,
                                 ),
                               )
                             ],

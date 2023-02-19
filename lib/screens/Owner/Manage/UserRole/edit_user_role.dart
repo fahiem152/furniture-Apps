@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:furniture/models/user_role_model.dart';
 import 'package:furniture/providers/role_provider.dart';
 import 'package:furniture/providers/user_providers.dart';
 import 'package:furniture/providers/user_role_provider.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 
-class AddUserRole extends StatefulWidget {
-  const AddUserRole({super.key});
+class EditUserRole extends StatefulWidget {
+  UserRoleModel userRole;
+  EditUserRole({super.key, required this.userRole});
 
   @override
-  State<AddUserRole> createState() => _AddUserRoleState();
+  State<EditUserRole> createState() => _EditUserRoleState();
 }
 
-class _AddUserRoleState extends State<AddUserRole> {
+class _EditUserRoleState extends State<EditUserRole> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  // var valueRole;
-  // var valueUser;
-  // int valueUser = 0;
-  // int valueRole = 0;
 
   @override
   void initState() {
@@ -29,25 +27,18 @@ class _AddUserRoleState extends State<AddUserRole> {
 
   @override
   Widget build(BuildContext context) {
+    final userRoleProvider = Provider.of<UserRoleProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     final roleProvider = Provider.of<RoleProvider>(context);
-    final userRoleProvider = Provider.of<UserRoleProvider>(context);
-    handleCreateUserRole() async {
+
+    handleUpdateRole() async {
       setState(() {
         isLoading = true;
       });
-      // final addUserRole = await userRoleProvider.createUserRole(
-      //   authUserId: userRoleProvider.userId!,
-      //   authRoleId: userRoleProvider.roleId!,
-      // );
-      // if (addUserRole) {
-      //   Navigator.pop(context);
-
-      // }
-      if (await userRoleProvider.createUserRole(
-        // user_id: valueUser, role_id: valueRole
+      if (await userRoleProvider.updateUserRole(
         authUserId: userRoleProvider.userId!,
         authRoleId: userRoleProvider.roleId!,
+        id: widget.userRole.id!,
       )) {
         Navigator.pop(context);
       } else {
@@ -57,7 +48,7 @@ class _AddUserRoleState extends State<AddUserRole> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: color5,
           content: Text(
-            'Gagal Untuk Create User Role',
+            'Gagal Untuk Update Role, Role sudah ada',
             style: textColor1.copyWith(
               fontSize: 16,
               fontWeight: medium,
@@ -66,18 +57,16 @@ class _AddUserRoleState extends State<AddUserRole> {
           ),
         ));
       }
-      print('Role id: ${userRoleProvider.userId.toString()}' +
-          " User id: ${userRoleProvider.roleId.toString()}");
       setState(() {
         isLoading = false;
       });
     }
 
-    add() {
+    edit() {
       final form = _formKey.currentState!;
       if (form.validate()) {
         form.save();
-        handleCreateUserRole();
+        handleUpdateRole();
       }
     }
 
@@ -93,7 +82,7 @@ class _AddUserRoleState extends State<AddUserRole> {
           centerTitle: true,
           elevation: 1,
           title: Text(
-            "Add User Role",
+            "Edit User Role",
             style: textColor3.copyWith(
               fontSize: 16,
               fontWeight: semiBold,
@@ -176,7 +165,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                         child: CircularProgressIndicator(),
                       )
                     : GestureDetector(
-                        onTap: add,
+                        onTap: edit,
                         child: Container(
                           margin: EdgeInsets.only(top: defaultMargin),
                           height: 50,
@@ -186,7 +175,7 @@ class _AddUserRoleState extends State<AddUserRole> {
                           ),
                           child: Center(
                             child: Text(
-                              "Add User Role",
+                              "Edit User Role",
                               style: textColor3.copyWith(
                                 fontSize: 16,
                                 fontWeight: bold,

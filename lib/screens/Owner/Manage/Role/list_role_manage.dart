@@ -180,6 +180,7 @@ class _ListRoleManageState extends State<ListRoleManage> {
                   child: Container(
                     margin: EdgeInsets.only(
                       bottom: 20,
+                      right: 20,
                     ),
                     width: 50,
                     height: 50,

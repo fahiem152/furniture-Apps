@@ -13,13 +13,13 @@ class CardBrand extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailBrand(
-                brand: brand,
-              ),
-            ));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => DetailBrand(
+        //         brand: brand,
+        //       ),
+        //     ));
       },
       child: Container(
         height: 75,
@@ -53,7 +53,7 @@ class CardBrand extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  brand.brand_img.toString(),
+                  brand.brandImg.toString(),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -80,9 +80,10 @@ class CardBrand extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    brand.product!.length != 0
-                        ? brand.product!.length.toString()
-                        : '0',
+                    'Product: 0',
+                    // brand.product!.length != 0
+                    //     ? brand.product!.length.toString()
+                    //     : '0',
                     style: textColor3.copyWith(
                       fontSize: 16,
                       fontWeight: reguler,

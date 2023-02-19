@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furniture/providers/user_role_provider.dart';
+import 'package:furniture/screens/Owner/Manage/UserRole/edit_user_role.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -80,11 +81,21 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => EditUser(
-                                    //             user: userList[index])));
+                                    final userRoleProvider =
+                                        Provider.of<UserRoleProvider>(context,
+                                            listen: false);
+                                    userRoleProvider.setUserId(
+                                        userRoleList[index].user!.id);
+                                    userRoleProvider.setRoleId(
+                                        userRoleList[index].role!.id);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EditUserRole(
+                                          userRole: userRoleList[index],
+                                        ),
+                                      ),
+                                    );
                                   },
                                   icon: Icon(
                                     Icons.edit,
@@ -96,10 +107,12 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                                     Alert(
                                       context: context,
                                       type: AlertType.warning,
-                                      title: "Hapus Role",
+                                      title: "Hapus User Role ",
                                       desc:
-                                          'Apakah Anda Yakin Ingin Menghapus Role "' +
-                                              // userList[index].name +
+                                          'Apakah Anda Yakin Ingin Menghapus User Role "' +
+                                              userRoleList[index].user!.name +
+                                              ' - ' +
+                                              userRoleList[index].role!.name +
                                               '" ?',
                                       buttons: [
                                         DialogButton(
@@ -121,15 +134,15 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                                                 fontSize: 20),
                                           ),
                                           onPressed: () async {
-                                            // await Provider.of<UserProvider>(
-                                            //         context,
-                                            //         listen: false)
-                                            //     .deleteUser(
-                                            //         id: int.parse(
-                                            //             userList[index]
-                                            //                 .id
-                                            //                 .toString()));
-                                            // Navigator.pop(context);
+                                            await Provider.of<UserRoleProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .deleteUserRole(
+                                                    id: int.parse(
+                                                        userRoleList[index]
+                                                            .id
+                                                            .toString()));
+                                            Navigator.pop(context);
                                           },
                                           color: color5,
                                         )

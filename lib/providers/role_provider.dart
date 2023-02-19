@@ -5,17 +5,17 @@ import 'package:furniture/services/role_service.dart';
 class RoleProvider with ChangeNotifier {
   RoleService _roleService = RoleService();
   List<RoleModel> _roles = [];
-  String _selectedRole = '';
+  // String _selectedRole = '';
   RoleModel _role = RoleModel(name: '');
 
   List<RoleModel> get roles => _roles;
-  String get selectedRole => _selectedRole;
+  // String get selectedRole => _selectedRole;
   // RoleModel get role => _role;
 
-  set selectedRole(String newRole) {
-    _selectedRole = newRole;
-    notifyListeners();
-  }
+  // set selectedRole(String newRole) {
+  //   _selectedRole = newRole;
+  //   notifyListeners();
+  // }
 
   // bool isRoleNameAvailable(String name) {
   //   return !_roles.contains(name);
