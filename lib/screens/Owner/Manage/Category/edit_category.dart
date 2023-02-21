@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:furniture/providers/brand_provider.dart';
+import 'package:furniture/models/category_model.dart';
+import 'package:furniture/providers/category_provider.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 
-class AddBrand extends StatefulWidget {
-  const AddBrand({super.key});
+class EditCategory extends StatefulWidget {
+  CategoryModel category;
+  EditCategory({super.key, required this.category});
 
   @override
-  State<AddBrand> createState() => _AddBrandState();
+  State<EditCategory> createState() => _EditCategoryState();
 }
 
-class _AddBrandState extends State<AddBrand> {
+class _EditCategoryState extends State<EditCategory> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _imgController = TextEditingController();
   bool isLoading = false;
   @override
-  Widget build(BuildContext context) {
-    final brandProvider = Provider.of<BrandProvider>(context);
+  void initState() {
+    super.initState();
+    _nameController.text = widget.category.name;
+    _imgController.text = widget.category.categoryImg;
+  }
 
-    handleCreateBrand() async {
+  @override
+  Widget build(BuildContext context) {
+    final categoryProvider = Provider.of<CategoryProvider>(context);
+
+    handleUpdateCategory() async {
       setState(() {
         isLoading = true;
       });
-      if (await brandProvider.createBrand(
+      if (await categoryProvider.updateCategory(
+        id: widget.category.id!,
         name: _nameController.text,
         imgUrl: _imgController.text,
       )) {
@@ -37,7 +45,7 @@ class _AddBrandState extends State<AddBrand> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: color5,
           content: Text(
-            'Gagal Untuk Create Brand',
+            'Gagal Untuk Update Category',
             style: textColor1.copyWith(
               fontSize: 16,
               fontWeight: medium,
@@ -46,22 +54,16 @@ class _AddBrandState extends State<AddBrand> {
           ),
         ));
       }
-      print(
-        _nameController.text,
-      );
-      print(
-        _imgController.text,
-      );
       setState(() {
         isLoading = false;
       });
     }
 
-    add() {
+    edit() {
       final form = _formKey.currentState!;
       if (form.validate()) {
         form.save();
-        handleCreateBrand();
+        handleUpdateCategory();
       }
     }
 
@@ -77,7 +79,7 @@ class _AddBrandState extends State<AddBrand> {
           centerTitle: true,
           elevation: 1,
           title: Text(
-            "Add Brand",
+            "Edit Category",
             style: textColor3.copyWith(
               fontSize: 16,
               fontWeight: semiBold,
@@ -106,12 +108,12 @@ class _AddBrandState extends State<AddBrand> {
                     controller: _nameController,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return "Brand Name cannot be empty";
+                        return "Category Name cannot be empty";
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      hintText: "Brand Name",
+                      hintText: "Category Name",
                       hintStyle: textColor3.copyWith(
                         fontSize: 16,
                         fontWeight: medium,
@@ -136,12 +138,12 @@ class _AddBrandState extends State<AddBrand> {
                     controller: _imgController,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return "Brand Image cannot be empty";
+                        return "Category Image cannot be empty";
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      hintText: "Brand image",
+                      hintText: "Category image",
                       hintStyle: textColor3.copyWith(
                         fontSize: 16,
                         fontWeight: medium,
@@ -160,7 +162,7 @@ class _AddBrandState extends State<AddBrand> {
                         color: color4,
                       )
                     : GestureDetector(
-                        onTap: add,
+                        onTap: edit,
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
@@ -169,7 +171,7 @@ class _AddBrandState extends State<AddBrand> {
                           ),
                           child: Center(
                             child: Text(
-                              "Add Brand",
+                              "Edit Category",
                               style: textColor3.copyWith(
                                 fontSize: 16,
                                 fontWeight: bold,

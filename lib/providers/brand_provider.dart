@@ -11,11 +11,6 @@ class BrandProvider with ChangeNotifier {
 
   List<BrandModel> get brands => _brands;
 
-  // set brands(List<BrandModel> brands) {
-  //   _brands = brands;
-  //   notifyListeners();
-  // }
-
   Future<void> fetchBrand() async {
     try {
       _brands = await _brandService.fetchBrand();

@@ -13,6 +13,7 @@ import 'package:furniture/screens/Admin/home_admin_screen.dart';
 import 'package:furniture/screens/Admin/main_admin_screen.dart';
 import 'package:furniture/screens/Kurir/home_kurir_screen.dart';
 import 'package:furniture/screens/Owner/Manage/Brand/add_brand.dart';
+import 'package:furniture/screens/Owner/Manage/Category/add_category.dart';
 import 'package:furniture/screens/Owner/Manage/Role/add_role.dart';
 import 'package:furniture/screens/Owner/Manage/User/add_user.dart';
 import 'package:furniture/screens/Owner/Manage/UserRole/add_user_role.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
           '/add-user': (context) => AddUser(),
           '/add-user-role': (context) => AddUserRole(),
           '/add-brand': (context) => AddBrand(),
+          '/add-category': (context) => AddCategory(),
 
           // '/addproduct': (context) => AddProduct(),
         },

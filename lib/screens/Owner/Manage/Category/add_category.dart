@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:furniture/providers/brand_provider.dart';
+import 'package:furniture/providers/category_provider.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 
-class AddBrand extends StatefulWidget {
-  const AddBrand({super.key});
+class AddCategory extends StatefulWidget {
+  const AddCategory({super.key});
 
   @override
-  State<AddBrand> createState() => _AddBrandState();
+  State<AddCategory> createState() => _AddCategoryState();
 }
 
-class _AddBrandState extends State<AddBrand> {
+class _AddCategoryState extends State<AddCategory> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _imgController = TextEditingController();
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    final brandProvider = Provider.of<BrandProvider>(context);
+    final categoryProvider = Provider.of<CategoryProvider>(context);
 
-    handleCreateBrand() async {
+    handleCreateCategory() async {
       setState(() {
         isLoading = true;
       });
-      if (await brandProvider.createBrand(
+      if (await categoryProvider.createCategory(
         name: _nameController.text,
         imgUrl: _imgController.text,
       )) {
@@ -37,7 +35,7 @@ class _AddBrandState extends State<AddBrand> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: color5,
           content: Text(
-            'Gagal Untuk Create Brand',
+            'Gagal Untuk Create Category',
             style: textColor1.copyWith(
               fontSize: 16,
               fontWeight: medium,
@@ -46,12 +44,7 @@ class _AddBrandState extends State<AddBrand> {
           ),
         ));
       }
-      print(
-        _nameController.text,
-      );
-      print(
-        _imgController.text,
-      );
+
       setState(() {
         isLoading = false;
       });
@@ -61,7 +54,7 @@ class _AddBrandState extends State<AddBrand> {
       final form = _formKey.currentState!;
       if (form.validate()) {
         form.save();
-        handleCreateBrand();
+        handleCreateCategory();
       }
     }
 
@@ -77,7 +70,7 @@ class _AddBrandState extends State<AddBrand> {
           centerTitle: true,
           elevation: 1,
           title: Text(
-            "Add Brand",
+            "Add Category",
             style: textColor3.copyWith(
               fontSize: 16,
               fontWeight: semiBold,
@@ -106,12 +99,12 @@ class _AddBrandState extends State<AddBrand> {
                     controller: _nameController,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return "Brand Name cannot be empty";
+                        return "Category Name cannot be empty";
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      hintText: "Brand Name",
+                      hintText: "Category Name",
                       hintStyle: textColor3.copyWith(
                         fontSize: 16,
                         fontWeight: medium,
@@ -136,12 +129,12 @@ class _AddBrandState extends State<AddBrand> {
                     controller: _imgController,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return "Brand Image cannot be empty";
+                        return "Category Image cannot be empty";
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      hintText: "Brand image",
+                      hintText: "Category image",
                       hintStyle: textColor3.copyWith(
                         fontSize: 16,
                         fontWeight: medium,
@@ -169,7 +162,7 @@ class _AddBrandState extends State<AddBrand> {
                           ),
                           child: Center(
                             child: Text(
-                              "Add Brand",
+                              "Add Category",
                               style: textColor3.copyWith(
                                 fontSize: 16,
                                 fontWeight: bold,

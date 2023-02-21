@@ -21,7 +21,7 @@ class _DetailProductAdminScreenState extends State<DetailProductAdminScreen> {
   void initState() {
     super.initState();
     Provider.of<BrandProvider>(context, listen: false).fetchBrand();
-    Provider.of<CategoryProvider>(context, listen: false).geCategorys();
+    Provider.of<CategoryProvider>(context, listen: false).fetchCategory();
   }
 
   @override
