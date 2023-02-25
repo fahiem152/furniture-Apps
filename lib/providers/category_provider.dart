@@ -5,9 +5,16 @@ import 'package:furniture/services/category_services.dart';
 class CategoryProvider with ChangeNotifier {
   CategoryService _categoryService = CategoryService();
   List<CategoryModel> _categorys = [];
+  int? _valueCategory;
   CategoryModel _category = CategoryModel(name: '', categoryImg: '');
 
   List<CategoryModel> get categorys => _categorys;
+  int? get valueCategory => _valueCategory;
+
+  void setValueCategory(int? newValue) {
+    _valueCategory = newValue;
+    notifyListeners();
+  }
 
   Future<void> fetchCategory() async {
     try {

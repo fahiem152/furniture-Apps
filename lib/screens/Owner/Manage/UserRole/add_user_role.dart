@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furniture/providers/role_provider.dart';
 import 'package:furniture/providers/user_providers.dart';
 import 'package:furniture/providers/user_role_provider.dart';
+import 'package:furniture/screens/Owner/manajemen_owner_screen.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -44,12 +45,22 @@ class _AddUserRoleState extends State<AddUserRole> {
       //   Navigator.pop(context);
 
       // }
-      if (await userRoleProvider.createUserRole(
+
+      if (userRoleProvider.userId == null && userRoleProvider.roleId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Silakan pilih opsi terlebih dahulu'),
+          ),
+        );
+      } else if (await userRoleProvider.createUserRole(
         // user_id: valueUser, role_id: valueRole
         authUserId: userRoleProvider.userId!,
         authRoleId: userRoleProvider.roleId!,
       )) {
+        print("${userRoleProvider.userId} + ${userRoleProvider.roleId}");
         Navigator.pop(context);
+        userRoleProvider.setRoleId(null);
+        userRoleProvider.setUserId(null);
       } else {
         setState(() {
           isLoading = true;
@@ -131,8 +142,11 @@ class _AddUserRoleState extends State<AddUserRole> {
                       );
                     }).toList(),
                     onChanged: (newValue) {
-                      userRoleProvider
-                          .setUserId(int.parse(newValue.toString()));
+                      userRoleProvider.setUserId(
+                        int.parse(
+                          newValue.toString(),
+                        ),
+                      );
                       // setState(() {
                       //   valueUser = newValue;
                       //   print(valueUser);
@@ -161,8 +175,11 @@ class _AddUserRoleState extends State<AddUserRole> {
                       );
                     }).toList(),
                     onChanged: (newValue) {
-                      userRoleProvider
-                          .setRoleId(int.parse(newValue.toString()));
+                      userRoleProvider.setRoleId(
+                        int.parse(
+                          newValue.toString(),
+                        ),
+                      );
                       // setState(() {
                       //   valueRole = newValue;
                       //   print(valueRole);

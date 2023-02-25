@@ -3,8 +3,16 @@ import 'package:furniture/models/product_model.dart';
 import 'package:furniture/services/product_services.dart';
 
 class ProductProvider with ChangeNotifier {
-  // late ProductModel _product;
+  ProductService _productService = ProductService();
   List<ProductModel> _products = [];
+  ProductModel _product = ProductModel(
+    name: '',
+    description: '',
+    price: 0,
+    urlImage: '',
+    brandId: 0,
+    categoryId: 0,
+  );
 
   String _searchText = '';
 
@@ -23,39 +31,83 @@ class ProductProvider with ChangeNotifier {
         .toList();
   }
 
-  Future<void> getProducts() async {
+  Future<void> fetchProduct() async {
     try {
-      final productService = ProductService();
-      _products = await productService.getProducts();
+      _products = await _productService.fetchProduct();
       notifyListeners();
     } catch (e) {
       print('provider Product errorr: ' + e.toString());
     }
   }
 
-  // Future<bool> addProduct({
-  //   String? name,
-  //   String? description,
-  //   int? price,
-  //   String? urlImage,
-  //   int? categoryId,
-  //   int? brandId,
-  // }) async {
-  //   try {
-  //     ProductModel product = await ProductService().addProduct(
-  //       name!,
-  //       description!,
-  //       price!,
-  //       urlImage!,
-  //       categoryId!,
-  //       brandId!,
-  //     );
-  //     // _product = product;
+  Future<bool> createProduct({
+    required String name,
+    required String description,
+    required int brandId,
+    required int categoryId,
+    required int price,
+    required String urlImage,
+  }) async {
+    try {
+      ProductModel product = await _productService.createProduct(
+        name: name,
+        description: description,
+        brandId: brandId,
+        categoryId: categoryId,
+        price: price,
+        urlImage: urlImage,
+      );
+      _product = product;
+      _products.add(product);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
-  //     return true;
-  //   } catch (e) {
-  //     print(e);
-  //     return false;
-  //   }
-  // }
+  Future<bool> updateProduct({
+    required String name,
+    required String description,
+    required int brandId,
+    required int categoryId,
+    required int price,
+    required String urlImage,
+    required int id,
+  }) async {
+    try {
+      ProductModel product = await _productService.updateProduct(
+        name: name,
+        description: description,
+        brandId: brandId,
+        categoryId: categoryId,
+        price: price,
+        urlImage: urlImage,
+        id: id,
+      );
+      int index = _products.indexWhere((element) => element.id == id);
+      if (index >= 0) {
+        _products[index] = product;
+      }
+      _product = product;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> deleteProduct({required int id}) async {
+    try {
+      await _productService.deleteProduct(id: id);
+      _products.removeWhere((element) => element.id == id);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

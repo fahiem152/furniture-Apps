@@ -24,12 +24,17 @@ class _SplashScreenState extends State<SplashScreen> {
   void loadUserInfo() async {
     await Future.delayed(Duration(milliseconds: 1000));
     String token = await getToken();
-
+    // final _tokenExpired = Duration(hours: 6);
+    // final time = DateTime.now();
     print('ini adalah token: ' + token);
 
     if (token == '') {
       Navigator.pushNamed(context, '/login');
-    } else {
+    }
+    // else if (time == _tokenExpired) {
+    //   Navigator.pushNamed(context, '/login');
+    // }
+    else {
       final Map<String, dynamic> decodedToken =
           await AuthService.getDecodedToken(token);
       print("decodedToken : " + decodedToken.toString());

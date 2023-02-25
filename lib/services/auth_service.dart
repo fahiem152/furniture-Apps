@@ -61,4 +61,12 @@ class AuthService {
     print('getDecodedToken : ' + data.toString());
     return data;
   }
+  // bool isTokenExpired(String token) {
+  //   final decoded = Jwt.parseJwt(token);
+  //   final Map<String, dynamic> data = decoded;
+  //   final exp = data['exp'];
+  //   final now = DateTime.now().millisecondsSinceEpoch / 1000;
+  //   return now > exp;
+  // }
+
 }

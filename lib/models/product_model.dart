@@ -2,26 +2,32 @@ import 'package:furniture/models/brand_model.dart';
 import 'package:furniture/models/category_model.dart';
 
 class ProductModel {
-  final int id;
+  int? id;
   final String name;
   final String description;
+  final int brandId;
+  final int categoryId;
   final int price;
   final String urlImage;
-  // final CategoryModel category;
-  // final BrandModel brand;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  int? stock;
+  CategoryModel? category;
+  BrandModel? brand;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   ProductModel({
-    required this.id,
+    this.id,
     required this.name,
     required this.description,
     required this.price,
     required this.urlImage,
-    // required this.category,
-    // required this.brand,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.brandId,
+    required this.categoryId,
+    this.stock,
+    this.category,
+    this.brand,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -30,10 +36,16 @@ class ProductModel {
         description: json['description'],
         price: json['price'],
         urlImage: json['urlImage'],
-        // category: CategoryModel.fromJson(json['category']),
-        // brand: BrandModel.fromJson(json['brand']),
+        brandId: json['brand_id'],
+        categoryId: json['category_id'],
+        stock: json['stock'],
         createdAt: DateTime.parse(json['createdAt']),
         updatedAt: DateTime.parse(json['updatedAt']),
+        category: json['category'] != null
+            ? CategoryModel.fromJson(json['category'])
+            : null,
+        brand:
+            json['brand'] != null ? BrandModel.fromJson(json['brand']) : null,
       );
 
   Map<String, dynamic> toJson() {
@@ -43,8 +55,13 @@ class ProductModel {
       'description': description,
       'price': price,
       'urlImage': urlImage,
-      // 'category': category.toJson(),
-      // 'brand': brand.toJson(),
+      'brand_id': brandId,
+      'category_id': categoryId,
+      'stock': stock,
+      'category': category!.toJson(),
+      'brand': brand!.toJson(),
+      // // 'category': category.toJson(),
+      // // 'brand': brand.toJson(),
       'createdAt': createdAt.toString(),
       'updatedAt': updatedAt.toString(),
     };

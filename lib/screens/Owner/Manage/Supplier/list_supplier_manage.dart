@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:furniture/providers/user_role_provider.dart';
-import 'package:furniture/screens/Owner/Manage/UserRole/edit_user_role.dart';
+import 'package:furniture/providers/supplier_provider.dart';
+import 'package:furniture/screens/Owner/Manage/Supplier/edit_supplier.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class ListUserRoleManage extends StatefulWidget {
-  const ListUserRoleManage({super.key});
+class ListSupplierManage extends StatefulWidget {
+  const ListSupplierManage({super.key});
 
   @override
-  State<ListUserRoleManage> createState() => _ListUserRoleManageState();
+  State<ListSupplierManage> createState() => _ListSupplierManageState();
 }
 
-class _ListUserRoleManageState extends State<ListUserRoleManage> {
+class _ListSupplierManageState extends State<ListSupplierManage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserRoleProvider>(context, listen: false).fetchUserRole();
+    Provider.of<SupplierProvider>(context, listen: false).fetchSupplier();
   }
 
   @override
   Widget build(BuildContext context) {
-    final userRoleList = Provider.of<UserRoleProvider>(context).userRoles;
-    return userRoleList.length == 0
+    final supplierList = Provider.of<SupplierProvider>(context).suppliers;
+
+    return supplierList.length == 0
         ? Center(
             child: CircularProgressIndicator(
               color: color5,
@@ -31,7 +32,7 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
         : Stack(
             children: [
               ListView.builder(
-                  itemCount: userRoleList.length,
+                  itemCount: supplierList.length,
                   itemBuilder: (context, index) {
                     return Container(
                         margin: EdgeInsets.fromLTRB(16, 8, 16, 20),
@@ -50,7 +51,7 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      userRoleList[index].id.toString(),
+                                      supplierList[index].id.toString(),
                                       style: textColor1.copyWith(
                                         fontSize: 16,
                                         fontWeight: semiBold,
@@ -62,18 +63,19 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      // userRoleList[index].user!.name,
-                                      userRoleList[index].user != null
-                                          ? userRoleList[index].user!.name
-                                          : 'Unknown',
+                                      supplierList[index].name,
                                       style: textColor3.copyWith(
                                           fontSize: 16, fontWeight: semiBold),
                                     ),
                                     Text(
-                                      // userRoleList[index].role!.name,
-                                      userRoleList[index].role != null
-                                          ? userRoleList[index].role!.name
-                                          : 'Unknown',
+                                      supplierList[index].address,
+                                      style: textColor3.copyWith(
+                                        fontSize: 12,
+                                        fontWeight: reguler,
+                                      ),
+                                    ),
+                                    Text(
+                                      supplierList[index].phone,
                                       style: textColor3.copyWith(
                                         fontSize: 12,
                                         fontWeight: reguler,
@@ -87,21 +89,12 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    final userRoleProvider =
-                                        Provider.of<UserRoleProvider>(context,
-                                            listen: false);
-                                    userRoleProvider.setUserId(
-                                        userRoleList[index].user!.id);
-                                    userRoleProvider.setRoleId(
-                                        userRoleList[index].role!.id);
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditUserRole(
-                                          userRole: userRoleList[index],
-                                        ),
-                                      ),
-                                    );
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => EditSupplier(
+                                                supplier:
+                                                    supplierList[index])));
                                   },
                                   icon: Icon(
                                     Icons.edit,
@@ -113,12 +106,10 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                                     Alert(
                                       context: context,
                                       type: AlertType.warning,
-                                      title: "Hapus User Role ",
+                                      title: "Hapus Role",
                                       desc:
-                                          'Apakah Anda Yakin Ingin Menghapus User Role "' +
-                                              userRoleList[index].user!.name +
-                                              ' - ' +
-                                              userRoleList[index].role!.name +
+                                          'Apakah Anda Yakin Ingin Menghapus Role "' +
+                                              supplierList[index].name +
                                               '" ?',
                                       buttons: [
                                         DialogButton(
@@ -140,12 +131,12 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                                                 fontSize: 20),
                                           ),
                                           onPressed: () async {
-                                            await Provider.of<UserRoleProvider>(
+                                            await Provider.of<SupplierProvider>(
                                                     context,
                                                     listen: false)
-                                                .deleteUserRole(
+                                                .deleteSupplier(
                                                     id: int.parse(
-                                                        userRoleList[index]
+                                                        supplierList[index]
                                                             .id
                                                             .toString()));
                                             Navigator.pop(context);
@@ -165,19 +156,31 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                           ],
                         ));
                   }),
-              Container(
-                margin: EdgeInsets.only(bottom: 20),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/add-user-role');
-                    },
-                    child: Icon(Icons.add),
-                    backgroundColor: color5,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/add-supplier');
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        25,
+                      ),
+                      color: color5,
+                    ),
+                    child: Icon(
+                      Icons.add,
+                      color: color1,
+                    ),
                   ),
                 ),
-              )
+              ),
             ],
           );
   }

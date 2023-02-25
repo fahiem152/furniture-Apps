@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:furniture/models/user_role_model.dart';
 import 'package:furniture/services/api_services.dart';
@@ -26,6 +27,7 @@ class UserRoleService {
   }) async {
     var response = await http.post(Uri.parse(_baseUrl),
         headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
           'Content-Type': 'application/json',
         },
         body: jsonEncode(

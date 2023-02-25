@@ -21,7 +21,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductProvider>(context, listen: false).getProducts();
+    Provider.of<ProductProvider>(context, listen: false).fetchProduct();
     // Provider.of<CategoryProvider>(context, listen: false).geCategorys();
     // Provider.of<BrandProvider>(context, listen: false).getBrands();
   }
@@ -71,11 +71,12 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                 Expanded(
                   child: IconButton(
                     onPressed: () => AuthService().logout().then(
-            (value) => Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => LoginScreen()),
-              (route) => false,
-            ),
-          ),
+                          (value) => Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                            (route) => false,
+                          ),
+                        ),
                     icon: Icon(
                       Icons.exit_to_app,
                     ),

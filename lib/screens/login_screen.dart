@@ -57,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/owner', (route) => false);
           }
+          authProvider.setValueRole(null);
 
           // Navigator.pushNamedAndRemoveUntil(
           //     context, '/admin', (route) => false);
@@ -287,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 40,
                         ),
                         isLoading
-                            ? CircularProgressIndicator()
+                            ? Center(child: CircularProgressIndicator())
                             : GestureDetector(
                                 onTap: handleLogin,
                                 child: Container(

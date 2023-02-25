@@ -1,4 +1,4 @@
-const baseUrl = "https://b22c-103-105-35-70.ap.ngrok.io";
+const baseUrl = "http://192.168.43.121:8080";
 const serverError = 'Server Error';
 const unauthorized = 'unauthorized';
 const somethingWhentWrong = 'somethingWhentWrong';

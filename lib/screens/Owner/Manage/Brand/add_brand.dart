@@ -29,6 +29,17 @@ class _AddBrandState extends State<AddBrand> {
         name: _nameController.text,
         imgUrl: _imgController.text,
       )) {
+        SnackBar(
+          backgroundColor: color5,
+          content: Text(
+            'Berhasil Create Brand',
+            style: textColor1.copyWith(
+              fontSize: 16,
+              fontWeight: medium,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        );
         Navigator.pop(context);
       } else {
         setState(() {

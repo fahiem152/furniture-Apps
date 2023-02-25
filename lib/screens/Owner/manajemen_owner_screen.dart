@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:furniture/screens/Owner/Manage/Brand/list_brand_manage.dart';
 import 'package:furniture/screens/Owner/Manage/Category/list_category_manage.dart';
 import 'package:furniture/screens/Owner/Manage/Role/list_role_manage.dart';
+import 'package:furniture/screens/Owner/Manage/Supplier/list_supplier_manage.dart';
 import 'package:furniture/screens/Owner/Manage/User/list_user_manage.dart';
 import 'package:furniture/screens/Owner/Manage/UserRole/list_user_role_manage.dart';
-import 'package:furniture/screens/Owner/Manage/list_product_manage.dart';
+import 'package:furniture/screens/Owner/Manage/Product/list_product_manage.dart';
 import 'package:furniture/theme.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 
@@ -150,8 +151,12 @@ List<ListBodyManageOwner> listBodyManageOwner = [
     image: 'assets/images/logo-category.png',
   ),
   ListBodyManageOwner(
-    title: "Manage products",
+    title: "Manage Products",
     image: 'assets/images/logo-product.png',
+  ),
+  ListBodyManageOwner(
+    title: "Manage Suppliers",
+    image: 'assets/images/logo-supplier.png',
   ),
 ];
 
@@ -203,6 +208,7 @@ class _DetailManageOwnerState extends State<DetailManageOwner> {
         ListBrandManage(),
         ListCategoryManage(),
         ListProductManage(),
+        ListSupplierManage(),
       ],
     );
   }

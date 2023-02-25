@@ -35,12 +35,20 @@ class _EditUserRoleState extends State<EditUserRole> {
       setState(() {
         isLoading = true;
       });
-      if (await userRoleProvider.updateUserRole(
+      if (userRoleProvider.userId == null && userRoleProvider.roleId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Silakan pilih opsi terlebih dahulu'),
+          ),
+        );
+      } else if (await userRoleProvider.updateUserRole(
         authUserId: userRoleProvider.userId!,
         authRoleId: userRoleProvider.roleId!,
         id: widget.userRole.id!,
       )) {
         Navigator.pop(context);
+        userRoleProvider.setRoleId(null);
+        userRoleProvider.setUserId(null);
       } else {
         setState(() {
           isLoading = true;

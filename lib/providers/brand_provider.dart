@@ -8,8 +8,14 @@ class BrandProvider with ChangeNotifier {
   BrandService _brandService = BrandService();
   List<BrandModel> _brands = [];
   BrandModel _brand = BrandModel(name: '', brandImg: '');
-
+  int? _valueBrand;
+  int? get valueBrand => _valueBrand;
   List<BrandModel> get brands => _brands;
+
+  void setValueBrand(int? newValue) {
+    _valueBrand = newValue;
+    notifyListeners();
+  }
 
   Future<void> fetchBrand() async {
     try {

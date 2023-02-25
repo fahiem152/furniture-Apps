@@ -6,6 +6,7 @@ import 'package:furniture/providers/category_provider.dart';
 import 'package:furniture/providers/product_provider.dart';
 import 'package:furniture/providers/role_provider.dart';
 import 'package:furniture/providers/search_provider.dart';
+import 'package:furniture/providers/supplier_provider.dart';
 import 'package:furniture/providers/user_providers.dart';
 import 'package:furniture/providers/user_role_provider.dart';
 import 'package:furniture/screens/Admin/detail_product_admin_screen.dart';
@@ -14,7 +15,9 @@ import 'package:furniture/screens/Admin/main_admin_screen.dart';
 import 'package:furniture/screens/Kurir/home_kurir_screen.dart';
 import 'package:furniture/screens/Owner/Manage/Brand/add_brand.dart';
 import 'package:furniture/screens/Owner/Manage/Category/add_category.dart';
+import 'package:furniture/screens/Owner/Manage/Product/add_product.dart';
 import 'package:furniture/screens/Owner/Manage/Role/add_role.dart';
+import 'package:furniture/screens/Owner/Manage/Supplier/add_supplier.dart';
 import 'package:furniture/screens/Owner/Manage/User/add_user.dart';
 import 'package:furniture/screens/Owner/Manage/UserRole/add_user_role.dart';
 
@@ -60,6 +63,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => BrandProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => SupplierProvider(),
+        ),
         // ChangeNotifierProvider(
         //   create: (context) => SearchProvider(),
         // ),
@@ -84,6 +90,8 @@ class MyApp extends StatelessWidget {
           '/add-user-role': (context) => AddUserRole(),
           '/add-brand': (context) => AddBrand(),
           '/add-category': (context) => AddCategory(),
+          '/add-product': (context) => AddProduct(),
+          '/add-supplier': (context) => AddSupplier(),
 
           // '/addproduct': (context) => AddProduct(),
         },
