@@ -9,3 +9,8 @@ Future<String> getRole() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('role') ?? '';
 }
+
+Future<String> getUserName() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('username') ?? '';
+}

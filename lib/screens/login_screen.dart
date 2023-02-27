@@ -62,20 +62,23 @@ class _LoginScreenState extends State<LoginScreen> {
           // Navigator.pushNamedAndRemoveUntil(
           //     context, '/admin', (route) => false);
         } else {
+          setState(() {
+            isLoading = false;
+          });
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Login Failed'),
             ),
           );
-          Navigator.pop(context);
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Login Failed'),
+            content: Text('Invalid Input'),
           ),
         );
-        Navigator.pop(context);
+        // Navigator.pop(context);
       }
       setState(() {
         isLoading = false;

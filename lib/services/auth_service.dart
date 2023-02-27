@@ -10,6 +10,43 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   final String _baseUrl = '$baseUrl/api/login';
 
+  // Future<LoginResponeModel> login(
+  //   String email,
+  //   String password,
+  //   int roleId,
+  // ) async {
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(
+  //         _baseUrl,
+  //       ),
+  //       body: {
+  //         'email': email,
+  //         'password': password,
+  //         'role_id': "$roleId",
+  //       },
+  //     );
+  //     if (response.statusCode == 200) {
+  //       final jsonData = json.decode(response.body)['data'];
+  //       final loginResponse = LoginResponeModel.fromJson(jsonData);
+
+  //       // menyimpan token ke shared preferences
+  //       final prefs = await SharedPreferences.getInstance();
+  //       prefs.setString('token', loginResponse.token);
+  //       // print(loginResponse);
+  //       print(prefs.getString('token'));
+  //       return loginResponse;
+  //     } else if (response.statusCode == 401) {
+  //       throw Exception('Email atau kata sandi atau id peran tidak valid');
+  //     } else {
+  //       throw Exception('Terjadi kesalahan');
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     throw Exception('Email atau kata sandi atau id peran tidak valid');
+  //   }
+  // }
+
   Future<LoginResponeModel> login(
     String email,
     String password,
@@ -46,7 +83,7 @@ class AuthService {
       }
     } catch (e) {
       print(e);
-      throw e;
+      throw Exception(e);
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furniture/models/product_model.dart';
 import 'package:furniture/screens/Admin/detail_product_admin_screen.dart';
 import 'package:furniture/theme.dart';
+import 'package:furniture/utils/format_rupiah.dart';
 
 class CardProductAdminWidget extends StatelessWidget {
   const CardProductAdminWidget({super.key, required this.product});
@@ -57,7 +58,7 @@ class CardProductAdminWidget extends StatelessWidget {
               height: 4,
             ),
             Text(
-              'Rp. ${product.price}',
+              formatRupiah(product.price),
               maxLines: 1,
               style: textColor5.copyWith(
                 fontSize: 16,

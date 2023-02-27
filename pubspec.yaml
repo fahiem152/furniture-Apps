@@ -43,6 +43,7 @@ dependencies:
   jwt_decode: ^0.3.1
   lazy_load_indexed_stack: ^0.1.4
   rflutter_alert: ^2.0.4
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

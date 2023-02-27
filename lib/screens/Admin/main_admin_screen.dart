@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furniture/screens/Admin/home_admin_screen.dart';
 import 'package:furniture/screens/Admin/order_admin_screen.dart';
 import 'package:furniture/screens/Admin/prodile_admin_screen.dart';
+import 'package:furniture/screens/Admin/supplay_admin_screen.dart';
 import 'package:furniture/services/page_provider.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
@@ -50,8 +51,15 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.person_outline,
+                    Icons.receipt_long_outlined,
                     color: pageProvider.pageIndex == 2 ? color5 : color3,
+                  ),
+                  label: 'Supplay',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.person_outline,
+                    color: pageProvider.pageIndex == 3 ? color5 : color3,
                   ),
                   label: 'Profile',
                 ),
@@ -69,6 +77,9 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
           return OrderAdminScreen();
           break;
         case 2:
+          return SupplayAdminScreen();
+          break;
+        case 3:
           return ProfileAdminScreen();
           break;
         default:

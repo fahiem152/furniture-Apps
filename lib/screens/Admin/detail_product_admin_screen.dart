@@ -5,6 +5,7 @@ import 'package:furniture/models/product_model.dart';
 import 'package:furniture/providers/brand_provider.dart';
 import 'package:furniture/providers/category_provider.dart';
 import 'package:furniture/theme.dart';
+import 'package:furniture/utils/format_rupiah.dart';
 import 'package:provider/provider.dart';
 
 class DetailProductAdminScreen extends StatefulWidget {
@@ -94,7 +95,7 @@ class _DetailProductAdminScreenState extends State<DetailProductAdminScreen> {
                     height: 8,
                   ),
                   Text(
-                    'Rp. ${widget.product.price}',
+                    formatRupiah(widget.product.price),
                     style: TextStyle(
                       color: color1,
                       fontSize: 16,
@@ -145,7 +146,7 @@ class _DetailProductAdminScreenState extends State<DetailProductAdminScreen> {
                         cells: [
                           DataCell(
                             Text(
-                              'Category',
+                              widget.product.category!.name,
                               style: TextStyle(
                                 color: color1,
                                 fontSize: 16,
@@ -155,7 +156,7 @@ class _DetailProductAdminScreenState extends State<DetailProductAdminScreen> {
                           ),
                           DataCell(
                             Text(
-                              'No Brand',
+                              widget.product.brand!.name,
                               style: TextStyle(
                                 color: color1,
                                 fontSize: 16,
