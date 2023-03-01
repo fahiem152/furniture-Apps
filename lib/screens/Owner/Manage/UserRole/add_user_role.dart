@@ -33,6 +33,7 @@ class _AddUserRoleState extends State<AddUserRole> {
     final userProvider = Provider.of<UserProvider>(context);
     final roleProvider = Provider.of<RoleProvider>(context);
     final userRoleProvider = Provider.of<UserRoleProvider>(context);
+
     handleCreateUserRole() async {
       setState(() {
         isLoading = true;
@@ -57,7 +58,8 @@ class _AddUserRoleState extends State<AddUserRole> {
         authUserId: userRoleProvider.userId!,
         authRoleId: userRoleProvider.roleId!,
       )) {
-        print("${userRoleProvider.userId} + ${userRoleProvider.roleId}");
+        await Provider.of<UserRoleProvider>(context, listen: false)
+            .fetchUserRole();
         Navigator.pop(context);
         userRoleProvider.setRoleId(null);
         userRoleProvider.setUserId(null);

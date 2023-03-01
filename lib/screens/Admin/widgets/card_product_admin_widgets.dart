@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furniture/models/product_model.dart';
 import 'package:furniture/screens/Admin/detail_product_admin_screen.dart';
 import 'package:furniture/theme.dart';
-import 'package:furniture/utils/format_rupiah.dart';
+import 'package:furniture/utils/formatter.dart';
 
 class CardProductAdminWidget extends StatelessWidget {
   const CardProductAdminWidget({super.key, required this.product});
@@ -51,6 +51,18 @@ class CardProductAdminWidget extends StatelessWidget {
               style: textColor3.copyWith(
                 fontSize: 16,
                 fontWeight: medium,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              'Stock: ${product.stock}',
+              maxLines: 1,
+              style: textColor3.copyWith(
+                fontSize: 16,
+                fontWeight: semiBold,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

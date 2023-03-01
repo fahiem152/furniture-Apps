@@ -88,8 +88,10 @@ class _ListUserRoleManageState extends State<ListUserRoleManage> {
                                 IconButton(
                                   onPressed: () {
                                     final userRoleProvider =
-                                        Provider.of<UserRoleProvider>(context,
-                                            listen: false);
+                                        Provider.of<UserRoleProvider>(
+                                      context,
+                                      listen: false,
+                                    );
                                     userRoleProvider.setUserId(
                                         userRoleList[index].user!.id);
                                     userRoleProvider.setRoleId(

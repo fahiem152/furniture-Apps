@@ -6,15 +6,21 @@ class SupplierProvider with ChangeNotifier {
   SupplierService _supplierService = SupplierService();
   List<SupplierModel> _suppliers = [];
   SupplierModel _supplier = SupplierModel(name: '', address: '', phone: '');
-
+  int? _valueSupplier;
   List<SupplierModel> get suppliers => _suppliers;
+  int? get valueSupplier => _valueSupplier;
+
+  void setValueSupplier(int? newValue) {
+    _valueSupplier = newValue;
+    notifyListeners();
+  }
 
   Future<void> fetchSupplier() async {
     try {
       _suppliers = await _supplierService.fetchSupplier();
       notifyListeners();
     } catch (e) {
-      print(3);
+      print(e);
     }
   }
 

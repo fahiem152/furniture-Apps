@@ -206,7 +206,7 @@ class _AddSupplierState extends State<AddSupplier> {
                             ),
                             child: Center(
                               child: Text(
-                                "Add Brand",
+                                "Add Supplier",
                                 style: textColor3.copyWith(
                                   fontSize: 16,
                                   fontWeight: bold,

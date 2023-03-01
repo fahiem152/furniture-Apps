@@ -11,6 +11,7 @@ import 'package:furniture/services/role_service.dart';
 import 'package:furniture/services/storage_service.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:dart_jwt/dart_jwt.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -37,7 +38,13 @@ class _SplashScreenState extends State<SplashScreen> {
     else {
       final Map<String, dynamic> decodedToken =
           await AuthService.getDecodedToken(token);
+
       print("decodedToken : " + decodedToken.toString());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('id', decodedToken['id'].toString());
+
+      // print("UserId: " + decodedToken['id'].toString());
+      print("UserId:  +${prefs.getString('id')}");
       print("decodedToken['role_id'] : " + decodedToken['role_id'].toString());
       if (decodedToken['role_id'] == 1) {
         Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);

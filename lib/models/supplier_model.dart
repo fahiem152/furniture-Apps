@@ -23,7 +23,7 @@ class SupplierModel {
       supplayProduct: json["incomeProduct"] != null
           ? List<SupplayProductModel>.from(
               json["incomeProduct"].map((x) => SupplayProductModel.fromJson(x)))
-          : null);
+          : <SupplayProductModel>[]);
 
   Map<String, dynamic> toJson() => {
         "id": id,

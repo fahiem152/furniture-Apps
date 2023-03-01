@@ -46,6 +46,8 @@ class _EditUserRoleState extends State<EditUserRole> {
         authRoleId: userRoleProvider.roleId!,
         id: widget.userRole.id!,
       )) {
+        await Provider.of<UserRoleProvider>(context, listen: false)
+            .fetchUserRole();
         Navigator.pop(context);
         userRoleProvider.setRoleId(null);
         userRoleProvider.setUserId(null);

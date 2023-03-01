@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:furniture/screens/Admin/OrderProduct/order_admin_screen.dart';
 import 'package:furniture/screens/Admin/home_admin_screen.dart';
-import 'package:furniture/screens/Admin/order_admin_screen.dart';
+
 import 'package:furniture/screens/Admin/prodile_admin_screen.dart';
-import 'package:furniture/screens/Admin/supplay_admin_screen.dart';
+import 'package:furniture/screens/Admin/SupplayProduct/supplay_admin_screen.dart';
 import 'package:furniture/services/page_provider.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';

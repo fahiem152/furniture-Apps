@@ -4,3 +4,8 @@ String formatRupiah(int value) {
   final formatter = NumberFormat('#,###', 'id_ID');
   return 'Rp. ${formatter.format(value)}';
 }
+
+String formatWaktu(DateTime waktu) {
+  final formatter = DateFormat('HH:mm:ss | dd-MM-yyyy');
+  return '${formatter.format(waktu)}';
+}

@@ -6,9 +6,11 @@ import 'package:furniture/providers/category_provider.dart';
 import 'package:furniture/providers/product_provider.dart';
 import 'package:furniture/providers/role_provider.dart';
 import 'package:furniture/providers/search_provider.dart';
+import 'package:furniture/providers/supplay_product_provider.dart';
 import 'package:furniture/providers/supplier_provider.dart';
 import 'package:furniture/providers/user_providers.dart';
 import 'package:furniture/providers/user_role_provider.dart';
+import 'package:furniture/screens/Admin/SupplayProduct/add_supplay_product.dart';
 import 'package:furniture/screens/Admin/detail_product_admin_screen.dart';
 import 'package:furniture/screens/Admin/home_admin_screen.dart';
 import 'package:furniture/screens/Admin/main_admin_screen.dart';
@@ -66,6 +68,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => SupplierProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => SupplayProductProvider(),
+        ),
         // ChangeNotifierProvider(
         //   create: (context) => SearchProvider(),
         // ),
@@ -92,6 +97,7 @@ class MyApp extends StatelessWidget {
           '/add-category': (context) => AddCategory(),
           '/add-product': (context) => AddProduct(),
           '/add-supplier': (context) => AddSupplier(),
+          '/add-supplay-product': (context) => AddSupplayProduct(),
 
           // '/addproduct': (context) => AddProduct(),
         },

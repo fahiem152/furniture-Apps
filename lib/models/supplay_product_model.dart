@@ -1,3 +1,6 @@
+import 'package:furniture/models/product_model.dart';
+import 'package:furniture/models/supplier_model.dart';
+
 class SupplayProductModel {
   SupplayProductModel({
     this.id,
@@ -8,6 +11,8 @@ class SupplayProductModel {
     this.totalPrice,
     this.createdAt,
     this.updatedAt,
+    this.product,
+    this.supplier,
   });
 
   int? id;
@@ -18,6 +23,8 @@ class SupplayProductModel {
   int? totalPrice;
   DateTime? createdAt;
   DateTime? updatedAt;
+  ProductModel? product;
+  SupplierModel? supplier;
 
   factory SupplayProductModel.fromJson(Map<String, dynamic> json) =>
       SupplayProductModel(
@@ -29,6 +36,21 @@ class SupplayProductModel {
         totalPrice: json["total_price"],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
+        product: json["product"] != null
+            ? ProductModel.fromJson(json["product"])
+            // : ProductModel(
+            //     name: 'jashdjha',
+            //     description: 'description',
+            //     price: 0,
+            //     urlImage: 'urlImage',
+            //     brandId: 0,
+            //     categoryId: 0),
+            : null,
+        supplier: json["supplier"] != null
+            ? SupplierModel.fromJson(json["supplier"])
+            : null,
+        // : SupplierModel(
+        //     name: 'unokwons', address: 'address', phone: 'phone'),
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,5 +62,7 @@ class SupplayProductModel {
         "total_price": totalPrice,
         "createdAt": createdAt.toString(),
         "updatedAt": updatedAt.toString(),
+        "product": product!.toJson(),
+        "supplier": supplier!.toJson(),
       };
 }

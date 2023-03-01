@@ -5,7 +5,7 @@ import 'package:furniture/models/product_model.dart';
 import 'package:furniture/providers/brand_provider.dart';
 import 'package:furniture/providers/category_provider.dart';
 import 'package:furniture/theme.dart';
-import 'package:furniture/utils/format_rupiah.dart';
+import 'package:furniture/utils/formatter.dart';
 import 'package:provider/provider.dart';
 
 class DetailProductAdminScreen extends StatefulWidget {

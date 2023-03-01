@@ -13,11 +13,18 @@ class ProductProvider with ChangeNotifier {
     brandId: 0,
     categoryId: 0,
   );
+  int? _valueProduct;
 
   String _searchText = '';
 
   List<ProductModel> get products => _products;
+  int? get valueProduct => _valueProduct;
   String get searchText => _searchText;
+
+  void setValueProduct(int? value) {
+    _valueProduct = value;
+    notifyListeners();
+  }
 
   set searchText(String value) {
     _searchText = value;
@@ -27,7 +34,7 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> get filteredProducts {
     return _products
         .where((product) =>
-            product.name.toLowerCase().contains(searchText.toLowerCase()))
+            product.name!.toLowerCase().contains(searchText.toLowerCase()))
         .toList();
   }
 
