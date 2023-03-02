@@ -6,6 +6,6 @@ String formatRupiah(int value) {
 }
 
 String formatWaktu(DateTime waktu) {
-  final formatter = DateFormat('HH:mm:ss | dd-MM-yyyy');
+  final formatter = DateFormat('dd-MM-yyyy');
   return '${formatter.format(waktu)}';
 }

@@ -43,7 +43,7 @@ class _SupplayAdminScreenState extends State<SupplayAdminScreen> {
           columns: <DataColumn>[
             DataColumn(
               label: Text(
-                'Waktu | Tanggal',
+                'Tanggal',
                 style: textColor1.copyWith(
                   fontSize: 16,
                   fontWeight: reguler,
@@ -210,7 +210,7 @@ class _SupplayAdminScreenState extends State<SupplayAdminScreen> {
                               Alert(
                                 context: context,
                                 type: AlertType.warning,
-                                title: "Hapus Role",
+                                title: "Hapus Data Supplay Product",
                                 desc:
                                     'Apakah Anda Yakin Ingin Menghapus Data Supplay Product "' +
                                         e.product!.name +

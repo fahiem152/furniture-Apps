@@ -15,6 +15,7 @@ Color color3 = Color(0xff1D1D1D);
 Color color4 = Color(0xffFFC100);
 Color color5 = Color(0xff0E4FAA);
 Color color6 = Color(0xff2264BF);
+Color color7 = Color(0xffff0e0e);
 
 TextStyle textColor1 = GoogleFonts.poppins(color: color1);
 TextStyle textColor2 = GoogleFonts.poppins(color: color2);

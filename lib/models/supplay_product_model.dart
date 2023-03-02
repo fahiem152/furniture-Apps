@@ -38,19 +38,10 @@ class SupplayProductModel {
         updatedAt: DateTime.parse(json["updatedAt"]),
         product: json["product"] != null
             ? ProductModel.fromJson(json["product"])
-            // : ProductModel(
-            //     name: 'jashdjha',
-            //     description: 'description',
-            //     price: 0,
-            //     urlImage: 'urlImage',
-            //     brandId: 0,
-            //     categoryId: 0),
             : null,
         supplier: json["supplier"] != null
             ? SupplierModel.fromJson(json["supplier"])
             : null,
-        // : SupplierModel(
-        //     name: 'unokwons', address: 'address', phone: 'phone'),
       );
 
   Map<String, dynamic> toJson() => {

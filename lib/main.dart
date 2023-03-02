@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:furniture/providers/auth_provider.dart';
 import 'package:furniture/providers/brand_provider.dart';
 import 'package:furniture/providers/category_provider.dart';
+import 'package:furniture/providers/order_product_provider.dart';
 import 'package:furniture/providers/product_provider.dart';
 import 'package:furniture/providers/role_provider.dart';
 import 'package:furniture/providers/search_provider.dart';
@@ -10,6 +11,7 @@ import 'package:furniture/providers/supplay_product_provider.dart';
 import 'package:furniture/providers/supplier_provider.dart';
 import 'package:furniture/providers/user_providers.dart';
 import 'package:furniture/providers/user_role_provider.dart';
+import 'package:furniture/screens/Admin/OrderProduct/add_order_product.dart';
 import 'package:furniture/screens/Admin/SupplayProduct/add_supplay_product.dart';
 import 'package:furniture/screens/Admin/detail_product_admin_screen.dart';
 import 'package:furniture/screens/Admin/home_admin_screen.dart';
@@ -71,6 +73,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => SupplayProductProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => OrderProductProvider(),
+        ),
         // ChangeNotifierProvider(
         //   create: (context) => SearchProvider(),
         // ),
@@ -98,6 +103,7 @@ class MyApp extends StatelessWidget {
           '/add-product': (context) => AddProduct(),
           '/add-supplier': (context) => AddSupplier(),
           '/add-supplay-product': (context) => AddSupplayProduct(),
+          '/add-order-product': (context) => AddOrderProduct(),
 
           // '/addproduct': (context) => AddProduct(),
         },

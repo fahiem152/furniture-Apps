@@ -177,7 +177,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
               crossAxisCount: 2,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 0.5,
+              childAspectRatio: 0.6,
               children: productProvider.filteredProducts
                   .map((product) => CardProductAdminWidget(product: product))
                   .toList(),
