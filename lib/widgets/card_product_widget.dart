@@ -4,8 +4,8 @@ import 'package:furniture/screens/Admin/detail_product_admin_screen.dart';
 import 'package:furniture/theme.dart';
 import 'package:furniture/utils/formatter.dart';
 
-class CardProductAdminWidget extends StatelessWidget {
-  const CardProductAdminWidget({super.key, required this.product});
+class CardProductWidget extends StatelessWidget {
+  const CardProductWidget({super.key, required this.product});
   final ProductModel product;
 
   @override

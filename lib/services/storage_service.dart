@@ -12,10 +12,10 @@ Future<String> getUserId() async {
 
 Future<String> getRole() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('role') ?? '';
+  return prefs.getString('role_id') ?? '';
 }
 
-Future<String> getUserName() async {
+Future<String> getName() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('username') ?? '';
+  return prefs.getString('name') ?? '';
 }

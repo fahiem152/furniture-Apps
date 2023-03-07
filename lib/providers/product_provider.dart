@@ -34,7 +34,7 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> get filteredProducts {
     return _products
         .where((product) =>
-            product.name!.toLowerCase().contains(searchText.toLowerCase()))
+            product.name.toLowerCase().contains(searchText.toLowerCase()))
         .toList();
   }
 

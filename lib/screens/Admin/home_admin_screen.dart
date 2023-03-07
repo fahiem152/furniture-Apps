@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:furniture/providers/product_provider.dart';
 import 'package:furniture/providers/search_provider.dart';
-import 'package:furniture/screens/Admin/widgets/card_product_admin_widgets.dart';
+import 'package:furniture/services/storage_service.dart';
+import 'package:furniture/widgets/card_product_widget.dart';
 import 'package:furniture/screens/login_screen.dart';
 import 'package:furniture/services/auth_service.dart';
 
@@ -18,12 +19,20 @@ class HomeAdminScreen extends StatefulWidget {
 
 class _HomeAdminScreenState extends State<HomeAdminScreen> {
   TextEditingController searchTextController = TextEditingController(text: '');
+  String name = '';
+  String role = '';
   @override
   void initState() {
     super.initState();
     Provider.of<ProductProvider>(context, listen: false).fetchProduct();
+    loadInfoUser();
     // Provider.of<CategoryProvider>(context, listen: false).geCategorys();
     // Provider.of<BrandProvider>(context, listen: false).getBrands();
+  }
+
+  loadInfoUser() async {
+    name = await getName();
+    role = await getRole();
   }
 
   @override
@@ -52,15 +61,22 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Reza Adi Syahputra',
-                      style: textColor1.copyWith(
-                        fontSize: 20,
-                        fontWeight: semiBold,
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.47,
+                      child: Text(
+                        name == '' ? 'Name' : name,
+                        style: textColor1.copyWith(
+                          fontSize: 20,
+                          fontWeight: semiBold,
+                        ),
                       ),
                     ),
                     Text(
-                      'Admin',
+                      role == ''
+                          ? 'Role'
+                          : role == '1'
+                              ? 'Admin'
+                              : 'Role Unknown',
                       style: textColor1.copyWith(
                         fontSize: 16,
                         fontWeight: medium,
@@ -68,21 +84,20 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                     )
                   ],
                 ),
-                Expanded(
-                  child: IconButton(
-                    onPressed: () => AuthService().logout().then(
-                          (value) => Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                            (route) => false,
-                          ),
+                Spacer(),
+                IconButton(
+                  onPressed: () => AuthService().logout().then(
+                        (value) => Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                          (route) => false,
                         ),
-                    icon: Icon(
-                      Icons.exit_to_app,
-                    ),
-                    color: color4,
-                    iconSize: 30,
+                      ),
+                  icon: Icon(
+                    Icons.exit_to_app,
                   ),
+                  color: color4,
+                  iconSize: 30,
                 )
               ],
             ),
@@ -179,7 +194,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
               physics: const NeverScrollableScrollPhysics(),
               childAspectRatio: 0.6,
               children: productProvider.filteredProducts
-                  .map((product) => CardProductAdminWidget(product: product))
+                  .map((product) => CardProductWidget(product: product))
                   .toList(),
             )
           ],

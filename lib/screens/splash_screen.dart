@@ -42,9 +42,13 @@ class _SplashScreenState extends State<SplashScreen> {
       print("decodedToken : " + decodedToken.toString());
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('id', decodedToken['id'].toString());
+      prefs.setString('role_id', decodedToken['role_id'].toString());
+      prefs.setString('name', decodedToken['name'].toString());
 
       // print("UserId: " + decodedToken['id'].toString());
-      print("UserId:  +${prefs.getString('id')}");
+      print("UserId:  ${prefs.getString('id')}");
+      print("Name:  ${prefs.getString('name')}");
+      print("RoleId:  ${prefs.getString('role_id')}");
       print("decodedToken['role_id'] : " + decodedToken['role_id'].toString());
       if (decodedToken['role_id'] == 1) {
         Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);

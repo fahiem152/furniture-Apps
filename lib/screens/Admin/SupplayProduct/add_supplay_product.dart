@@ -59,6 +59,8 @@ class _AddSupplayProductState extends State<AddSupplayProduct> {
         productId: productProvider.valueProduct!,
         supplierId: supplierProvider.valueSupplier!,
       )) {
+        productProvider.setValueProduct(null);
+        supplierProvider.setValueSupplier(null);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -73,10 +75,8 @@ class _AddSupplayProductState extends State<AddSupplayProduct> {
         );
         await Provider.of<SupplayProductProvider>(context, listen: false)
             .fetchSupplayProduct();
-        Navigator.pop(context);
 
-        productProvider.setValueProduct(null);
-        supplierProvider.setValueSupplier(null);
+        Navigator.pop(context);
       } else {
         setState(() {
           isLoading = true;
@@ -181,7 +181,7 @@ class _AddSupplayProductState extends State<AddSupplayProduct> {
                         hint: Text("Select Supplier"),
                         items: supplierProvider.suppliers
                             .map((e) => DropdownMenuItem(
-                                  child: Text(e.name!),
+                                  child: Text(e.name),
                                   value: e.id,
                                 ))
                             .toList(),

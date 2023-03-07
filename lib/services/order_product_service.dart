@@ -29,6 +29,37 @@ class OrderProductService {
     }
   }
 
+  Future<List<OrderProductModel>>
+      fetchOrderProductByDeliveryTypeDeliveryStatus({
+    required String deliveryType,
+    required String deliveryStatus,
+  }) async {
+    String token = await getToken();
+    final response = await http.get(
+      Uri.parse(_baseUrl +
+          '?' +
+          deliveryType +
+          '=true' +
+          '&' +
+          deliveryStatus +
+          '=true'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'aplication/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      print('ini adalah List Data Product ${data}');
+      return data
+          .map<OrderProductModel>((json) => OrderProductModel.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   Future<OrderProductModel> createOrderProduct({
     // required int authUserId,
     required int productId,

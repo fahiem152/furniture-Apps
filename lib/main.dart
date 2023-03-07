@@ -17,6 +17,7 @@ import 'package:furniture/screens/Admin/detail_product_admin_screen.dart';
 import 'package:furniture/screens/Admin/home_admin_screen.dart';
 import 'package:furniture/screens/Admin/main_admin_screen.dart';
 import 'package:furniture/screens/Kurir/home_kurir_screen.dart';
+import 'package:furniture/screens/Kurir/main_kurir_screen.dart';
 import 'package:furniture/screens/Owner/Manage/Brand/add_brand.dart';
 import 'package:furniture/screens/Owner/Manage/Category/add_category.dart';
 import 'package:furniture/screens/Owner/Manage/Product/add_product.dart';
@@ -93,7 +94,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => SplashScreen(),
           '/login': (context) => LoginScreen(),
           '/admin': (context) => MainAdminScreen(),
-          '/kurir': (context) => HomeKurirScreen(),
+          '/kurir': (context) => MainKurirScreen(),
           '/owner': (context) => MainOwnerScreen(),
           '/add-role': (context) => AddRole(),
           '/add-user': (context) => AddUser(),

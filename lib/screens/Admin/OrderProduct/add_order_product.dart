@@ -53,6 +53,9 @@ class _AddOrderProductState extends State<AddOrderProduct> {
           productId: productProvider.valueProduct!,
           deliveryType: orderProductProvider.valDeliveryType!,
           deliveryStatus: orderProductProvider.valDeliveryStatus!)) {
+        productProvider.setValueProduct(null);
+        orderProductProvider.setDeliveryType('Delivery');
+        orderProductProvider.setDeliveryStatus('Pending');
         await Provider.of<OrderProductProvider>(context, listen: false)
             .fetchOrderProduct();
         Navigator.pop(context);
@@ -68,9 +71,6 @@ class _AddOrderProductState extends State<AddOrderProduct> {
             ),
           ),
         );
-        productProvider.setValueProduct(null);
-        orderProductProvider.setDeliveryType('Delivery');
-        orderProductProvider.setDeliveryStatus('Pending');
       } else {
         setState(() {
           isLoading = true;
@@ -78,7 +78,7 @@ class _AddOrderProductState extends State<AddOrderProduct> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Gagal Menambhakan data  Order Product ',
+              'Gagal Menambhakan data Order Product Stock Tidak Mencukupi ',
               style: textColor1.copyWith(
                 fontSize: 16,
                 fontWeight: medium,
@@ -254,6 +254,7 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                     ),
                   ),
                   Container(
+                    height: 150,
                     margin: EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -262,6 +263,7 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                     ),
                     child: TextFormField(
                       controller: _customerAddresController,
+                      maxLines: null,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Customer Address cannot be empty";

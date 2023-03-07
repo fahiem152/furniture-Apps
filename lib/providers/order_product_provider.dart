@@ -48,6 +48,20 @@ class OrderProductProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchOrderProductByDeliveryTypeDeliveryStatus({
+    required String deliveryType,
+    required String deliveryStatus,
+  }) async {
+    try {
+      _orderProducts = await _orderProductService
+          .fetchOrderProductByDeliveryTypeDeliveryStatus(
+              deliveryType: deliveryType, deliveryStatus: deliveryStatus);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<bool> createOrderProduct({
     required int productId,
     required int quantity,
