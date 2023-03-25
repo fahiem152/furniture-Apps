@@ -3,13 +3,13 @@ import 'package:furniture/models/product_model.dart';
 class CategoryModel {
   int? id;
   final String name;
-  final String categoryImg;
+  String? categoryImg;
   List<ProductModel>? product;
 
   CategoryModel({
     this.id,
     required this.name,
-    required this.categoryImg,
+    this.categoryImg,
     this.product,
   });
 

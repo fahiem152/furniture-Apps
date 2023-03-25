@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:furniture/providers/auth_provider.dart';
 import 'package:furniture/providers/role_provider.dart';
+import 'package:furniture/services/storage_service.dart';
 
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isPasswordVisible = false;
   bool isLoading = false;
+  showAlertDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(
+            color: Colors.blueAccent,
+          ),
+          Container(
+              margin: const EdgeInsets.only(left: 5),
+              child: const Text("Loading")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         isLoading = true;
       });
+      showAlertDialog(context);
       if (_key.currentState!.validate()) {
         final loginResponse = await authProvider.login(
           emailController.text,
@@ -42,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
           authProvider.valueRole!,
         );
         if (loginResponse != null) {
+          await saveInfoUser();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Login Success'),
@@ -56,6 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
           } else if (authProvider.valueRole == 3) {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/owner', (route) => false);
+          } else if (authProvider.valueRole == 4) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/member', (route) => false);
           }
           authProvider.setValueRole(null);
 
@@ -66,11 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
             isLoading = false;
           });
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Login Failed'),
-            ),
-          );
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('${loginResponse.error}')));
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -290,27 +316,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 40,
                         ),
-                        isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : GestureDetector(
-                                onTap: handleLogin,
-                                child: Container(
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: color4,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Sign In",
-                                      style: textColor3.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: bold,
-                                      ),
-                                    ),
-                                  ),
+                        GestureDetector(
+                          onTap: handleLogin,
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: color4,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Sign In",
+                                style: textColor3.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: bold,
                                 ),
                               ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 16,
                         ),

@@ -10,7 +10,7 @@ FontWeight semiBold = FontWeight.w600;
 FontWeight bold = FontWeight.w700;
 
 Color color1 = Colors.white;
-Color color2 = Color(0xffE9E9E9);
+Color color2 = Color.fromARGB(212, 255, 255, 255);
 Color color3 = Color(0xff1D1D1D);
 Color color4 = Color(0xffFFC100);
 Color color5 = Color(0xff0E4FAA);

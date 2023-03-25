@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:furniture/models/category_model.dart';
+import 'package:furniture/models/chart_model.dart';
 import 'package:furniture/models/order_product_model.dart';
 import 'package:furniture/services/api_services.dart';
 import 'package:furniture/services/storage_service.dart';
@@ -29,6 +31,34 @@ class OrderProductService {
     }
   }
 
+  Future<List<OrderProductModel>> fetchOrderProductByUser({
+    required int userId,
+    required int page,
+    required int perpage,
+    required String deliveryStatus,
+  }) async {
+    String token = await getToken();
+    final response = await http.get(
+        Uri.parse(
+          // '$_baseUrl/$userId?$deliveryType=true&$deliveryStatus=true&page=$page&perpage=$perpage',
+          // '$_baseUrl/$userId?$deliveryStatus=true&page=$page&perpage=$perpage',
+          '$_baseUrl/$userId?$deliveryStatus=true',
+        ),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization': 'Bearer $token',
+        });
+    print(response.body);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      return data
+          .map<OrderProductModel>((json) => OrderProductModel.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load data order product');
+    }
+  }
+
   Future<List<OrderProductModel>>
       fetchOrderProductByDeliveryTypeDeliveryStatus({
     required String deliveryType,
@@ -36,13 +66,15 @@ class OrderProductService {
   }) async {
     String token = await getToken();
     final response = await http.get(
-      Uri.parse(_baseUrl +
-          '?' +
-          deliveryType +
-          '=true' +
-          '&' +
-          deliveryStatus +
-          '=true'),
+      Uri.parse(
+        _baseUrl +
+            '?' +
+            deliveryType +
+            '=true' +
+            '&' +
+            deliveryStatus +
+            '=true',
+      ),
       headers: {
         HttpHeaders.contentTypeHeader: 'aplication/json',
         'Authorization': 'Bearer $token',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:furniture/providers/product_provider.dart';
 import 'package:furniture/providers/supplay_product_provider.dart';
 import 'package:furniture/providers/supplier_provider.dart';
@@ -17,6 +18,8 @@ class _AddSupplayProductState extends State<AddSupplayProduct> {
   // final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _quantityController = TextEditingController();
+  final _productController = TextEditingController();
+  final _supplierController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -139,63 +142,170 @@ class _AddSupplayProductState extends State<AddSupplayProduct> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 16),
-                    padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                    margin: EdgeInsets.only(
+                      bottom: 16,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: color1,
                       border: Border.all(color: color5, width: 2),
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        hint: Text("Select Product"),
-                        items: productProvider.products
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e.name!),
-                                  value: e.id,
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          productProvider.setValueProduct(
-                            int.parse(
-                              newValue.toString(),
-                            ),
-                          );
-                        },
-                        value: productProvider.valueProduct,
+                    child: TypeAheadFormField(
+                      noItemsFoundBuilder: (context) => SizedBox(
+                        height: 50,
+                        child: Center(
+                          child: Text('No Item Found'),
+                        ),
                       ),
+                      suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                        elevation: 4.0,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      debounceDuration: const Duration(milliseconds: 400),
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _supplierController,
+                        decoration: InputDecoration(
+                          labelText: "Nama Product",
+                          hintText: "Cari Product",
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) async {
+                        return await productProvider.products
+                            .where((product) => product.name
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()))
+                            .map((product) =>
+                                {'id': product.id, 'name': product.name})
+                            .toList();
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion['name'].toString()),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        productProvider.setValueProduct(
+                            int.parse(suggestion['id'].toString()));
+
+                        _supplierController.text =
+                            suggestion['name'].toString();
+                      },
                     ),
                   ),
                   Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 16),
-                    padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                    margin: EdgeInsets.only(
+                      bottom: 16,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: color1,
                       border: Border.all(color: color5, width: 2),
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        hint: Text("Select Supplier"),
-                        items: supplierProvider.suppliers
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e.name),
-                                  value: e.id,
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          supplierProvider.setValueSupplier(
-                            int.parse(
-                              newValue.toString(),
-                            ),
-                          );
-                        },
-                        value: supplierProvider.valueSupplier,
+                    child: TypeAheadFormField(
+                      noItemsFoundBuilder: (context) => SizedBox(
+                        height: 50,
+                        child: Center(
+                          child: Text('No Supplier Found'),
+                        ),
                       ),
+                      suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                        elevation: 4.0,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      debounceDuration: const Duration(milliseconds: 400),
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _productController,
+                        decoration: InputDecoration(
+                          labelText: "Nama Supplier",
+                          hintText: "Cari Supplier",
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) async {
+                        return await supplierProvider.suppliers
+                            .where((supplier) => supplier.name
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()))
+                            .map((supplier) =>
+                                {'id': supplier.id, 'name': supplier.name})
+                            .toList();
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion['name'].toString()),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        supplierProvider.setValueSupplier(
+                            int.parse(suggestion['id'].toString()));
+
+                        _productController.text = suggestion['name'].toString();
+                      },
                     ),
                   ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   margin: EdgeInsets.only(bottom: 16),
+                  //   padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(12),
+                  //     color: color1,
+                  //     border: Border.all(color: color5, width: 2),
+                  //   ),
+                  //   child: DropdownButtonHideUnderline(
+                  //     child: DropdownButton(
+                  //       hint: Text("Select Product"),
+                  //       items: productProvider.products
+                  //           .map((e) => DropdownMenuItem(
+                  //                 child: Text(e.name!),
+                  //                 value: e.id,
+                  //               ))
+                  //           .toList(),
+                  //       onChanged: (newValue) {
+                  //         productProvider.setValueProduct(
+                  //           int.parse(
+                  //             newValue.toString(),
+                  //           ),
+                  //         );
+                  //       },
+                  //       value: productProvider.valueProduct,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   margin: EdgeInsets.only(bottom: 16),
+                  //   padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(12),
+                  //     color: color1,
+                  //     border: Border.all(color: color5, width: 2),
+                  //   ),
+                  //   child: DropdownButtonHideUnderline(
+                  //     child: DropdownButton(
+                  //       hint: Text("Select Supplier"),
+                  //       items: supplierProvider.suppliers
+                  //           .map((e) => DropdownMenuItem(
+                  //                 child: Text(e.name),
+                  //                 value: e.id,
+                  //               ))
+                  //           .toList(),
+                  //       onChanged: (newValue) {
+                  //         supplierProvider.setValueSupplier(
+                  //           int.parse(
+                  //             newValue.toString(),
+                  //           ),
+                  //         );
+                  //       },
+                  //       value: supplierProvider.valueSupplier,
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
                     margin: EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(

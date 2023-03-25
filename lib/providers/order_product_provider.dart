@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:furniture/models/order_product_model.dart';
 import 'package:furniture/services/order_product_service.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class OrderProductProvider with ChangeNotifier {
   OrderProductService _orderProductService = OrderProductService();
+  PagingController<int, OrderProductModel> _pagingController =
+      PagingController(firstPageKey: 1);
+
+  PagingController<int, OrderProductModel> get pagingController =>
+      _pagingController;
 
   List<OrderProductModel> _orderProducts = [];
   List<String> _deliveryTypes = ['TakeAway', 'Delivery'];
@@ -12,7 +18,7 @@ class OrderProductProvider with ChangeNotifier {
     'Delivered',
   ];
   String? _valDeliveryType;
-  String? _valDeliveryStatus;
+  String _valDeliveryStatus = 'Pending';
 
   OrderProductModel _orderProduct = OrderProductModel(
       productId: 0,
@@ -27,21 +33,55 @@ class OrderProductProvider with ChangeNotifier {
   List<String> get deliveryTypes => _deliveryTypes;
   List<String> get deliveryStatuses => _deliveryStatuses;
   String? get valDeliveryType => _valDeliveryType;
-  String? get valDeliveryStatus => _valDeliveryStatus;
+  String get valDeliveryStatus => _valDeliveryStatus;
 
   void setDeliveryType(String? value) {
     _valDeliveryType = value;
     notifyListeners();
   }
 
-  void setDeliveryStatus(String? value) {
+  void setDeliveryStatus(String value) {
     _valDeliveryStatus = value;
     notifyListeners();
   }
 
+  // OrderProductProvider({
+  //   required int userId,
+  //   // required int page,
+  //   required int perpage,
+  //   required String deliveryStatus,
+  // }) {
+  //   _pagingController.addPageRequestListener((pageKey) {
+  //     fetchOrderProductByUser(
+  //       userId: userId,
+  //       page: pageKey,
+  //       perpage: perpage,
+  //       deliveryStatus: deliveryStatus,
+  //     );
+  //   });
+  // }
+
   Future<void> fetchOrderProduct() async {
     try {
       _orderProducts = await _orderProductService.fetchOrderProduct();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> fetchOrderProductByUser({
+    required int userId,
+    required int page,
+    required int perpage,
+    required String deliveryStatus,
+  }) async {
+    try {
+      _orderProducts = await _orderProductService.fetchOrderProductByUser(
+          userId: userId,
+          page: page,
+          perpage: perpage,
+          deliveryStatus: deliveryStatus);
       notifyListeners();
     } catch (e) {
       print(e);

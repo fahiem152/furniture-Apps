@@ -56,7 +56,7 @@ class _DeliveredKurirScreenState extends State<DeliveredKurirScreen> {
               ),
               DataColumn(
                 label: Text(
-                  'Alamat Pemesan',
+                  'Alamat Pesenan',
                   style: textColor1.copyWith(
                     fontSize: 16,
                     fontWeight: reguler,

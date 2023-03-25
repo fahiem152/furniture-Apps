@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:furniture/models/product_model.dart';
 import 'package:furniture/providers/brand_provider.dart';
 import 'package:furniture/providers/category_provider.dart';
@@ -20,6 +21,8 @@ class _EditProductState extends State<EditProduct> {
   final _descController = TextEditingController();
   final _priceController = TextEditingController();
   final _imgController = TextEditingController();
+  final _brandController = TextEditingController();
+  final _categoryController = TextEditingController();
   bool isLoading = false;
   @override
   void initState() {
@@ -30,6 +33,8 @@ class _EditProductState extends State<EditProduct> {
     _descController.text = widget.product.description;
     _priceController.text = widget.product.price.toString();
     _imgController.text = widget.product.urlImage;
+    _brandController.text = widget.product.brand!.name;
+    _categoryController.text = widget.product.category!.name;
   }
 
   @override
@@ -160,6 +165,113 @@ class _EditProductState extends State<EditProduct> {
                     ),
                   ),
                   Container(
+                    margin: EdgeInsets.only(
+                      bottom: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: color1,
+                      border: Border.all(color: color5, width: 2),
+                    ),
+                    child: TypeAheadFormField(
+                      noItemsFoundBuilder: (context) => SizedBox(
+                        height: 50,
+                        child: Center(
+                          child: Text('No Brand Found'),
+                        ),
+                      ),
+                      suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                        elevation: 4.0,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      debounceDuration: const Duration(milliseconds: 400),
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _brandController,
+                        decoration: InputDecoration(
+                          labelText: "Nama Brand",
+                          hintText: "Cari Brand",
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) async {
+                        return await brandList
+                            .where((brand) => brand.name
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()))
+                            .map(
+                                (brand) => {'id': brand.id, 'name': brand.name})
+                            .toList();
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion['name'].toString()),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        brandProvider.setValueBrand(
+                            int.parse(suggestion['id'].toString()));
+
+                        _brandController.text = suggestion['name'].toString();
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      bottom: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: color1,
+                      border: Border.all(color: color5, width: 2),
+                    ),
+                    child: TypeAheadFormField(
+                      noItemsFoundBuilder: (context) => SizedBox(
+                        height: 50,
+                        child: Center(
+                          child: Text('No Category Found'),
+                        ),
+                      ),
+                      suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                        elevation: 4.0,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      debounceDuration: const Duration(milliseconds: 400),
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _categoryController,
+                        decoration: InputDecoration(
+                          labelText: "Nama Category",
+                          hintText: "Cari Category",
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) async {
+                        return await categoryList
+                            .where((category) => category.name
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()))
+                            .map((category) =>
+                                {'id': category.id, 'name': category.name})
+                            .toList();
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion['name'].toString()),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        categoryProvider.setValueCategory(
+                            int.parse(suggestion['id'].toString()));
+
+                        _categoryController.text =
+                            suggestion['name'].toString();
+                      },
+                    ),
+                  ),
+                  Container(
                     margin: EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -249,64 +361,64 @@ class _EditProductState extends State<EditProduct> {
                       ),
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 16),
-                    padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: color1,
-                      border: Border.all(color: color5, width: 2),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        hint: Text("Select Brand"),
-                        items: brandList
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e.name),
-                                  value: e.id,
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          brandProvider.setValueBrand(
-                            int.parse(
-                              newValue.toString(),
-                            ),
-                          );
-                        },
-                        value: brandProvider.valueBrand,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 16),
-                    padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: color1,
-                      border: Border.all(color: color5, width: 2),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        hint: Text("Select Category"),
-                        items: categoryList
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e.name),
-                                  value: e.id,
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          categoryProvider.setValueCategory(
-                            int.parse(
-                              newValue.toString(),
-                            ),
-                          );
-                        },
-                        value: categoryProvider.valueCategory,
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   margin: EdgeInsets.only(bottom: 16),
+                  //   padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(12),
+                  //     color: color1,
+                  //     border: Border.all(color: color5, width: 2),
+                  //   ),
+                  //   child: DropdownButtonHideUnderline(
+                  //     child: DropdownButton(
+                  //       hint: Text("Select Brand"),
+                  //       items: brandList
+                  //           .map((e) => DropdownMenuItem(
+                  //                 child: Text(e.name),
+                  //                 value: e.id,
+                  //               ))
+                  //           .toList(),
+                  //       onChanged: (newValue) {
+                  //         brandProvider.setValueBrand(
+                  //           int.parse(
+                  //             newValue.toString(),
+                  //           ),
+                  //         );
+                  //       },
+                  //       value: brandProvider.valueBrand,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   margin: EdgeInsets.only(bottom: 16),
+                  //   padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(12),
+                  //     color: color1,
+                  //     border: Border.all(color: color5, width: 2),
+                  //   ),
+                  //   child: DropdownButtonHideUnderline(
+                  //     child: DropdownButton(
+                  //       hint: Text("Select Category"),
+                  //       items: categoryList
+                  //           .map((e) => DropdownMenuItem(
+                  //                 child: Text(e.name),
+                  //                 value: e.id,
+                  //               ))
+                  //           .toList(),
+                  //       onChanged: (newValue) {
+                  //         categoryProvider.setValueCategory(
+                  //           int.parse(
+                  //             newValue.toString(),
+                  //           ),
+                  //         );
+                  //       },
+                  //       value: categoryProvider.valueCategory,
+                  //     ),
+                  //   ),
+                  // ),
                   isLoading
                       ? CircularProgressIndicator(
                           color: color4,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:furniture/providers/role_provider.dart';
 import 'package:furniture/providers/user_providers.dart';
 import 'package:furniture/providers/user_role_provider.dart';
@@ -15,6 +16,7 @@ class AddUserRole extends StatefulWidget {
 
 class _AddUserRoleState extends State<AddUserRole> {
   final _formKey = GlobalKey<FormState>();
+  final _userController = TextEditingController();
   bool isLoading = false;
   // var valueRole;
   // var valueUser;
@@ -125,38 +127,87 @@ class _AddUserRoleState extends State<AddUserRole> {
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: defaultMargin),
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  width: double.infinity,
                   decoration: BoxDecoration(
-                    border: Border.all(color: color5, width: 1),
                     borderRadius: BorderRadius.circular(12),
+                    color: color1,
+                    border: Border.all(color: color5, width: 2),
                   ),
-                  child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                    hint: Text(
-                      'Select User',
+                  child: TypeAheadFormField(
+                    noItemsFoundBuilder: (context) => SizedBox(
+                      height: 50,
+                      child: Center(
+                        child: Text('No User Found'),
+                      ),
                     ),
-                    items: userProvider.users.map((item) {
-                      return DropdownMenuItem(
-                        child: Text(item.name),
-                        value: item.id,
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      userRoleProvider.setUserId(
-                        int.parse(
-                          newValue.toString(),
-                        ),
-                      );
-                      // setState(() {
-                      //   valueUser = newValue;
-                      //   print(valueUser);
-                      // });
+                    suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                      elevation: 4.0,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                    debounceDuration: const Duration(milliseconds: 400),
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: _userController,
+                      decoration: InputDecoration(
+                        labelText: "Nama User",
+                        hintText: "Cari User",
+                      ),
+                    ),
+                    suggestionsCallback: (pattern) async {
+                      return await userProvider.users
+                          .where((user) => user.name
+                              .toLowerCase()
+                              .contains(pattern.toLowerCase()))
+                          .map((user) => {'id': user.id, 'name': user.name})
+                          .toList();
                     },
-                    value: userRoleProvider.userId,
-                  )),
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion['name'].toString()),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      userRoleProvider
+                          .setUserId(int.parse(suggestion['id'].toString()));
+
+                      _userController.text = suggestion['name'].toString();
+                    },
+                  ),
                 ),
+                // Container(
+                //   margin: EdgeInsets.only(top: defaultMargin),
+                //   padding: EdgeInsets.symmetric(horizontal: 12),
+                //   width: double.infinity,
+                //   decoration: BoxDecoration(
+                //     border: Border.all(color: color5, width: 1),
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: DropdownButtonHideUnderline(
+                //       child: DropdownButton(
+                //     hint: Text(
+                //       'Select User',
+                //     ),
+                //     items: userProvider.users.map((item) {
+                //       return DropdownMenuItem(
+                //         child: Text(item.name),
+                //         value: item.id,
+                //       );
+                //     }).toList(),
+                //     onChanged: (newValue) {
+                //       userRoleProvider.setUserId(
+                //         int.parse(
+                //           newValue.toString(),
+                //         ),
+                //       );
+                //       // setState(() {
+                //       //   valueUser = newValue;
+                //       //   print(valueUser);
+                //       // });
+                //     },
+                //     value: userRoleProvider.userId,
+                //   )),
+                // ),
                 Container(
                   margin: EdgeInsets.only(top: defaultMargin),
                   padding: EdgeInsets.symmetric(horizontal: 12),

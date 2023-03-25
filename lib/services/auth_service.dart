@@ -15,6 +15,10 @@ class AuthService {
     String password,
     int roleId,
   ) async {
+    // LoginResponeModel loginResponse = LoginResponeModel(
+    //   token: '',
+    //   error: '',
+    // );
     try {
       final response = await http.post(
         Uri.parse(
@@ -35,13 +39,17 @@ class AuthService {
 
         // save token to shared preferences
         final prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', loginResponse.token);
+        prefs.setString('token', loginResponse.token!);
 
-        // print(loginResponse);
         print(prefs.getString('token'));
         return loginResponse;
       } else if (response.statusCode == 401) {
-        throw Exception('Invalid email or password or role id');
+        throw Exception('Invalid email or password');
+        // final jsonData = json.decode(response.body);
+        // final loginResponse = LoginResponeModel.fromJson(jsonData['error']);
+        // return loginResponse.error == null
+        //     ? LoginResponeModel(error: 'Something went wrong')
+        //     : loginResponse;
       } else {
         throw Exception('Something went wrong');
       }
@@ -53,12 +61,19 @@ class AuthService {
 
   Future<bool> logout() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.remove('token');
+    return preferences.clear();
+    // return preferences.remove('token');
   }
 
   static Future<Map<String, dynamic>> getDecodedToken(String token) async {
     final decoded = Jwt.parseJwt(token);
     final Map<String, dynamic> data = decoded;
+    // final Map<String, dynamic> decodedToken =
+    //     await AuthService.getDecodedToken(token);
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.setString('id', decodedToken['id'].toString());
+    // prefs.setString('role_id', decodedToken['role_id'].toString());
+    // prefs.setString('name', decodedToken['name'].toString());
     print('getDecodedToken : ' + data.toString());
     return data;
   }

@@ -10,6 +10,7 @@ import 'package:furniture/services/auth_service.dart';
 import 'package:furniture/services/role_service.dart';
 import 'package:furniture/services/storage_service.dart';
 import 'package:furniture/theme.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:dart_jwt/dart_jwt.dart';
@@ -25,6 +26,27 @@ class _SplashScreenState extends State<SplashScreen> {
   void loadUserInfo() async {
     await Future.delayed(Duration(milliseconds: 1000));
     String token = await getToken();
+    // bool isExpired = Jwt.isExpired(token);
+    // isExpired ? token = '' :
+    if (token != '') {
+      bool isExpired = Jwt.isExpired(token);
+      if (isExpired) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('token');
+        token = '';
+      }
+    }
+
+    // cekToken() async {
+    //   bool isExpired = Jwt.isExpired(token);
+    //   if (isExpired) {
+    //     SharedPreferences prefs = await SharedPreferences.getInstance();
+    //     await prefs.remove('token');
+    //     return token = '';
+    //   }
+    //   return token;
+    // }
+
     // final _tokenExpired = Duration(hours: 6);
     // final time = DateTime.now();
     print('ini adalah token: ' + token);
@@ -40,15 +62,11 @@ class _SplashScreenState extends State<SplashScreen> {
           await AuthService.getDecodedToken(token);
 
       print("decodedToken : " + decodedToken.toString());
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('id', decodedToken['id'].toString());
-      prefs.setString('role_id', decodedToken['role_id'].toString());
-      prefs.setString('name', decodedToken['name'].toString());
 
       // print("UserId: " + decodedToken['id'].toString());
-      print("UserId:  ${prefs.getString('id')}");
-      print("Name:  ${prefs.getString('name')}");
-      print("RoleId:  ${prefs.getString('role_id')}");
+      // print("UserId:  ${prefs.getString('id')}");
+      // print("Name:  ${prefs.getString('name')}");
+      // print("RoleId:  ${prefs.getString('role_id')}");
       print("decodedToken['role_id'] : " + decodedToken['role_id'].toString());
       if (decodedToken['role_id'] == 1) {
         Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
@@ -56,6 +74,8 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushNamedAndRemoveUntil(context, '/kurir', (route) => false);
       } else if (decodedToken['role_id'] == 3) {
         Navigator.pushNamedAndRemoveUntil(context, '/owner', (route) => false);
+      } else if (decodedToken['role_id'] == 4) {
+        Navigator.pushNamedAndRemoveUntil(context, '/member', (route) => false);
       }
     }
   }

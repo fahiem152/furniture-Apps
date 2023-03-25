@@ -1,6 +1,11 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+
+import 'package:furniture/models/product_model.dart';
 import 'package:furniture/providers/order_product_provider.dart';
 import 'package:furniture/providers/product_provider.dart';
+import 'package:furniture/services/storage_service.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +24,20 @@ class _AddOrderProductState extends State<AddOrderProduct> {
   final _customerAddresController = TextEditingController();
   final _customerPhoneController = TextEditingController();
   final _addressDetailController = TextEditingController();
+  final _productController = TextEditingController();
   bool isLoading = false;
-
+  String roleId = '0';
+  String? productSelected;
   @override
   void initState() {
     Provider.of<ProductProvider>(context, listen: false).fetchProduct();
     super.initState();
+    loadUserData();
+  }
+
+  loadUserData() async {
+    roleId = await getRole();
+    print('roleid: ' + roleId);
   }
 
   @override
@@ -52,12 +65,12 @@ class _AddOrderProductState extends State<AddOrderProduct> {
           quantity: int.parse(_quantityController.text),
           productId: productProvider.valueProduct!,
           deliveryType: orderProductProvider.valDeliveryType!,
-          deliveryStatus: orderProductProvider.valDeliveryStatus!)) {
+          deliveryStatus: orderProductProvider.valDeliveryStatus)) {
         productProvider.setValueProduct(null);
         orderProductProvider.setDeliveryType('Delivery');
         orderProductProvider.setDeliveryStatus('Pending');
-        await Provider.of<OrderProductProvider>(context, listen: false)
-            .fetchOrderProduct();
+        // await Provider.of<OrderProductProvider>(context, listen: false)
+        //     .fetchOrderProduct();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -133,32 +146,56 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 16),
-                    padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                    margin: EdgeInsets.only(
+                      bottom: 16,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: color1,
                       border: Border.all(color: color5, width: 2),
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        hint: Text("Select Product"),
-                        items: productProvider.products
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e.name),
-                                  value: e.id,
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          productProvider.setValueProduct(
-                            int.parse(
-                              newValue.toString(),
-                            ),
-                          );
-                        },
-                        value: productProvider.valueProduct,
+                    child: TypeAheadFormField(
+                      noItemsFoundBuilder: (context) => SizedBox(
+                        height: 50,
+                        child: Center(
+                          child: Text('No Item Found'),
+                        ),
                       ),
+                      suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                        elevation: 4.0,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      debounceDuration: const Duration(milliseconds: 400),
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _productController,
+                        decoration: InputDecoration(
+                          labelText: "Nama Product",
+                          hintText: "Cari Product",
+                        ),
+                      ),
+                      suggestionsCallback: (pattern) async {
+                        return await productProvider.products
+                            .where((product) => product.name
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()))
+                            .map((product) =>
+                                {'id': product.id, 'name': product.name})
+                            .toList();
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion['name'].toString()),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        productProvider.setValueProduct(
+                            int.parse(suggestion['id'].toString()));
+
+                        _productController.text = suggestion['name'].toString();
+                      },
                     ),
                   ),
                   Container(
@@ -254,7 +291,6 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                     ),
                   ),
                   Container(
-                    height: 150,
                     margin: EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -263,7 +299,6 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                     ),
                     child: TextFormField(
                       controller: _customerAddresController,
-                      maxLines: null,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Customer Address cannot be empty";
@@ -317,6 +352,7 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                     ),
                   ),
                   Container(
+                    height: 150,
                     margin: EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -324,6 +360,7 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                       border: Border.all(color: color5, width: 2),
                     ),
                     child: TextFormField(
+                      maxLines: null,
                       controller: _addressDetailController,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -383,43 +420,45 @@ class _AddOrderProductState extends State<AddOrderProduct> {
                       ),
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 16),
-                    padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: color1,
-                      border: Border.all(color: color5, width: 2),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        hint: Text("Select Delivery Status"),
-                        items: orderProductProvider.deliveryStatuses
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e),
-                                  value: e,
-                                ))
-                            .toList(),
-                        // items: productProvider.products
-                        //     .map((e) => DropdownMenuItem(
-                        //           child: Text(e.name),
-                        //           value: e.id,
-                        //         ))
-                        //     .toList(),
-                        onChanged: (newValue) {
-                          orderProductProvider
-                              .setDeliveryStatus(newValue.toString());
-                          // productProvider.setValueProduct(
-                          //   int.parse(
-                          //     newValue.toString(),
-                          //   ),
-                          // );
-                        },
-                        value: orderProductProvider.valDeliveryStatus,
-                      ),
-                    ),
-                  ),
+                  roleId == '1'
+                      ? Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.only(bottom: 16),
+                          padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: color1,
+                            border: Border.all(color: color5, width: 2),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              hint: Text("Select Delivery Status"),
+                              items: orderProductProvider.deliveryStatuses
+                                  .map((e) => DropdownMenuItem(
+                                        child: Text(e),
+                                        value: e,
+                                      ))
+                                  .toList(),
+                              // items: productProvider.products
+                              //     .map((e) => DropdownMenuItem(
+                              //           child: Text(e.name),
+                              //           value: e.id,
+                              //         ))
+                              //     .toList(),
+                              onChanged: (newValue) {
+                                orderProductProvider
+                                    .setDeliveryStatus(newValue.toString());
+                                // productProvider.setValueProduct(
+                                //   int.parse(
+                                //     newValue.toString(),
+                                //   ),
+                                // );
+                              },
+                              value: orderProductProvider.valDeliveryStatus,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
                   isLoading
                       ? CircularProgressIndicator(
                           color: color4,

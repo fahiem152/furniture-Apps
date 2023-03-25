@@ -6,7 +6,7 @@ import 'package:furniture/screens/Admin/OrderProduct/detail_order_admin_screen.d
 import 'package:furniture/screens/Admin/OrderProduct/edit_order_product.dart';
 import 'package:furniture/theme.dart';
 import 'package:furniture/widgets/card_order_widget.dart';
-import 'package:furniture/widgets/order_admin_screen.dart';
+
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -48,14 +48,14 @@ class _OrderAdminScreenState extends State<OrderAdminScreen> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Text(
-                    'All',
-                    style: TextStyle(
-                      color: Color(0xff4169E1),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  // Text(
+                  //   'All',
+                  //   style: TextStyle(
+                  //     color: Color(0xff4169E1),
+                  //     fontSize: 18,
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
                 ],
               ),
               SizedBox(

@@ -20,11 +20,18 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> get products => _products;
   int? get valueProduct => _valueProduct;
   String get searchText => _searchText;
+  ProductModel? _selectProduct;
+  ProductModel? get selectProduct => _selectProduct;
 
   void setValueProduct(int? value) {
     _valueProduct = value;
     notifyListeners();
   }
+
+  // void setSelectProduct(ProductModel? product) {
+  //   _selectProduct = product!;
+  //   notifyListeners();
+  // }
 
   set searchText(String value) {
     _searchText = value;
@@ -36,6 +43,14 @@ class ProductProvider with ChangeNotifier {
         .where((product) =>
             product.name.toLowerCase().contains(searchText.toLowerCase()))
         .toList();
+  }
+
+  Future searchProduct(String params) async {
+    List<ProductModel> result = await _products
+        .where((element) =>
+            element.name.toLowerCase().contains(params.toLowerCase()))
+        .toList();
+    return result;
   }
 
   Future<void> fetchProduct() async {

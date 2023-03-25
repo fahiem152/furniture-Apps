@@ -98,7 +98,7 @@ class CardCategoyOwner extends StatelessWidget {
                 // ),
                 ),
             child: Image.network(
-              category.categoryImg,
+              category.categoryImg!,
               height: 100,
               width: double.infinity,
               fit: BoxFit.fill,

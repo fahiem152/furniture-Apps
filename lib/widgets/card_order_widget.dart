@@ -46,7 +46,7 @@ class CardOrderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: defaultMargin),
+      margin: EdgeInsets.only(bottom: defaultMargin, left: 12, right: 12),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -174,7 +174,7 @@ class CardOrderWidget extends StatelessWidget {
                     orderProduct.deliveryType,
                   );
                   orderProvider.setDeliveryStatus(
-                    orderProduct.deliveryStatus,
+                    orderProduct.deliveryStatus!,
                   );
 
                   Navigator.push(
@@ -189,7 +189,7 @@ class CardOrderWidget extends StatelessWidget {
                 },
                 child: Container(
                   height: 40,
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.15,
                   child: Center(
                     child: Text(
                       'Edit',
@@ -203,7 +203,7 @@ class CardOrderWidget extends StatelessWidget {
                 ),
               ),
               // : Container(),
-              roleId == 1
+              roleId == 1 || roleId == 4
                   ? ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith(
@@ -260,7 +260,7 @@ class CardOrderWidget extends StatelessWidget {
                       },
                       child: Container(
                         height: 40,
-                        width: MediaQuery.of(context).size.width * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.15,
                         child: Center(
                           child: Text(
                             'Delete',
@@ -297,7 +297,7 @@ class CardOrderWidget extends StatelessWidget {
                 },
                 child: Container(
                   height: 40,
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.15,
                   child: Center(
                     child: Text(
                       'Detail',

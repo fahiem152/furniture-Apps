@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furniture/models/product_model.dart';
+import 'package:furniture/providers/brand_provider.dart';
+import 'package:furniture/providers/category_provider.dart';
 import 'package:furniture/providers/product_provider.dart';
 import 'package:furniture/screens/Owner/Manage/Product/edit_product.dart';
 import 'package:furniture/theme.dart';
@@ -144,6 +146,16 @@ class CardProductOwner extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
+                      final brandProvider = Provider.of<BrandProvider>(
+                        context,
+                        listen: false,
+                      );
+                      final categoryProvider = Provider.of<CategoryProvider>(
+                        context,
+                        listen: false,
+                      );
+                      brandProvider.setValueBrand(product.brand!.id);
+                      categoryProvider.setValueCategory(product.category!.id);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

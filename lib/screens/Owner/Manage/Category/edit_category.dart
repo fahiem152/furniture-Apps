@@ -21,7 +21,7 @@ class _EditCategoryState extends State<EditCategory> {
   void initState() {
     super.initState();
     _nameController.text = widget.category.name;
-    _imgController.text = widget.category.categoryImg;
+    _imgController.text = widget.category.categoryImg!;
   }
 
   @override

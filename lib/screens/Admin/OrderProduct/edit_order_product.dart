@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:furniture/models/order_product_model.dart';
 import 'package:furniture/providers/order_product_provider.dart';
 import 'package:furniture/providers/product_provider.dart';
+import 'package:furniture/services/storage_service.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +28,14 @@ class _EditOrderProductState extends State<EditOrderProduct> {
   final _customerAddresController = TextEditingController();
   final _customerPhoneController = TextEditingController();
   final _addressDetailController = TextEditingController();
+  final _productController = TextEditingController();
   bool isLoading = false;
+  String roleId = '0';
+  String userId = '0';
+  loadUserData() async {
+    roleId = await getRole();
+    userId = await getUserId();
+  }
 
   @override
   void initState() {
@@ -38,6 +47,8 @@ class _EditOrderProductState extends State<EditOrderProduct> {
     _customerAddresController.text = widget.orderProduct.customerAddres;
     _customerPhoneController.text = widget.orderProduct.customerPhone;
     _addressDetailController.text = widget.orderProduct.addressDetails;
+    _productController.text = widget.orderProduct.product!.name;
+    loadUserData();
   }
 
   @override
@@ -65,11 +76,18 @@ class _EditOrderProductState extends State<EditOrderProduct> {
         customerPhone: _customerPhoneController.text,
         addressDetails: _addressDetailController.text,
         deliveryType: orderProductProvider.valDeliveryType!,
-        deliveryStatus: orderProductProvider.valDeliveryStatus!,
+        deliveryStatus: orderProductProvider.valDeliveryStatus,
         id: widget.orderProduct.id!,
       )) {
-        await Provider.of<OrderProductProvider>(context, listen: false)
-            .fetchOrderProduct();
+        roleId == '1' || roleId == '2'
+            ? await Provider.of<OrderProductProvider>(context, listen: false)
+                .fetchOrderProduct()
+            : await Provider.of<OrderProductProvider>(context, listen: false)
+                .fetchOrderProductByUser(
+                    userId: int.parse(userId),
+                    deliveryStatus: 'pending',
+                    page: 1,
+                    perpage: 10);
 
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -77,7 +95,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             content: Text(
               'Berhasil Menambhakan data  Order Product ',
               style: textColor1.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: medium,
               ),
               textAlign: TextAlign.center,
@@ -86,7 +104,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
         );
         productProvider.setValueProduct(null);
         orderProductProvider.setDeliveryType(null);
-        orderProductProvider.setDeliveryStatus(null);
+        orderProductProvider.setDeliveryStatus('Pending');
       } else {
         setState(() {
           isLoading = true;
@@ -96,7 +114,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             content: Text(
               'Gagal Edit data  Order Product ',
               style: textColor1.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
               textAlign: TextAlign.center,
@@ -131,7 +149,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
           title: Text(
             "Edit Order Product",
             style: textColor3.copyWith(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: semiBold,
             ),
           ),
@@ -139,43 +157,101 @@ class _EditOrderProductState extends State<EditOrderProduct> {
       );
     }
 
-    Widget editFormAdmin() {
+    Widget editFormAdminMember() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: double.infinity,
-            margin: EdgeInsets.only(bottom: 16),
-            padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+            margin: EdgeInsets.only(
+              bottom: 16,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: color1,
               border: Border.all(color: color5, width: 2),
             ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                hint: Text("Select Product"),
-                style: textColor3.copyWith(
-                  fontSize: 16,
-                  fontWeight: reguler,
+            child: TypeAheadFormField(
+              noItemsFoundBuilder: (context) => SizedBox(
+                height: 50,
+                child: Center(
+                  child: Text('No Item Found'),
                 ),
-                items: productProvider.products
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e.name),
-                          value: e.id,
-                        ))
-                    .toList(),
-                onChanged: (newValue) {
-                  productProvider.setValueProduct(
-                    int.parse(
-                      newValue.toString(),
-                    ),
-                  );
-                },
-                value: productProvider.valueProduct,
               ),
+              suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                elevation: 4.0,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              debounceDuration: const Duration(milliseconds: 400),
+              textFieldConfiguration: TextFieldConfiguration(
+                controller: _productController,
+                decoration: InputDecoration(
+                  labelText: "Nama Product",
+                  hintText: "Cari Product",
+                ),
+              ),
+              suggestionsCallback: (pattern) async {
+                return await productProvider.products
+                    .where((product) => product.name
+                        .toLowerCase()
+                        .contains(pattern.toLowerCase()))
+                    .map((product) => {'id': product.id, 'name': product.name})
+                    .toList();
+              },
+              itemBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(suggestion['name'].toString()),
+                );
+              },
+              onSuggestionSelected: (suggestion) {
+                productProvider
+                    .setValueProduct(int.parse(suggestion['id'].toString()));
+
+                _productController.text = suggestion['name'].toString();
+              },
             ),
           ),
+          // Container(
+          //   width: double.infinity,
+          //   margin: EdgeInsets.only(
+          //     bottom: 16,
+          //   ),
+          //   padding: EdgeInsets.only(
+          //     left: 12,
+          //     top: 4,
+          //     bottom: 4,
+          //   ),
+          //   decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.circular(12),
+          //     color: color1,
+          //     border: Border.all(color: color5, width: 2),
+          //   ),
+          //   child: DropdownButtonHideUnderline(
+          //     child: DropdownButton(
+          //       hint: Text("Select Product"),
+          //       style: textColor3.copyWith(
+          //         fontSize: 14,
+          //         fontWeight: reguler,
+          //       ),
+          //       items: productProvider.products
+          //           .map((e) => DropdownMenuItem(
+          //                 child: Text(e.name),
+          //                 value: e.id,
+          //               ))
+          //           .toList(),
+          //       onChanged: (newValue) {
+          //         productProvider.setValueProduct(
+          //           int.parse(
+          //             newValue.toString(),
+          //           ),
+          //         );
+          //       },
+          //       value: productProvider.valueProduct,
+          //     ),
+          //   ),
+          // ),
           Container(
             margin: EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
@@ -195,7 +271,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               decoration: InputDecoration(
                 hintText: "Product Price",
                 hintStyle: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 border: OutlineInputBorder(
@@ -226,7 +302,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               decoration: InputDecoration(
                 hintText: "Product Quantity",
                 hintStyle: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 border: OutlineInputBorder(
@@ -256,7 +332,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               decoration: InputDecoration(
                 hintText: "Customer Name",
                 hintStyle: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 border: OutlineInputBorder(
@@ -286,7 +362,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               decoration: InputDecoration(
                 hintText: "Customer Address",
                 hintStyle: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 border: OutlineInputBorder(
@@ -317,7 +393,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               decoration: InputDecoration(
                 hintText: "Customer Phone",
                 hintStyle: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 border: OutlineInputBorder(
@@ -347,7 +423,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               decoration: InputDecoration(
                 hintText: "Address Detail",
                 hintStyle: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 border: OutlineInputBorder(
@@ -372,7 +448,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               child: DropdownButton(
                 hint: Text("Select Delivery Type"),
                 style: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 items: orderProductProvider.deliveryTypes
@@ -388,35 +464,38 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               ),
             ),
           ),
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.only(bottom: 16),
-            padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: color1,
-              border: Border.all(color: color5, width: 2),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                hint: Text("Select Delivery Status"),
-                style: textColor3.copyWith(
-                  fontSize: 16,
-                  fontWeight: reguler,
-                ),
-                items: orderProductProvider.deliveryStatuses
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                    .toList(),
-                onChanged: (newValue) {
-                  orderProductProvider.setDeliveryStatus(newValue.toString());
-                },
-                value: orderProductProvider.valDeliveryStatus,
-              ),
-            ),
-          ),
+          roleId == '1'
+              ? Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(bottom: 16),
+                  padding: EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: color1,
+                    border: Border.all(color: color5, width: 2),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      hint: Text("Select Delivery Status"),
+                      style: textColor3.copyWith(
+                        fontSize: 14,
+                        fontWeight: reguler,
+                      ),
+                      items: orderProductProvider.deliveryStatuses
+                          .map((e) => DropdownMenuItem(
+                                child: Text(e),
+                                value: e,
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        orderProductProvider
+                            .setDeliveryStatus(newValue.toString());
+                      },
+                      value: orderProductProvider.valDeliveryStatus,
+                    ),
+                  ),
+                )
+              : SizedBox(),
           isLoading
               ? CircularProgressIndicator(
                   color: color4,
@@ -433,7 +512,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
                       child: Text(
                         "Edit Order Product",
                         style: textColor3.copyWith(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: bold,
                         ),
                       ),
@@ -460,7 +539,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.product!.name,
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -477,7 +556,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.productPrice.toString(),
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -494,7 +573,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.quantity.toString(),
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -511,7 +590,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.customerName,
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -528,7 +607,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.customerAddres,
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -545,7 +624,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.customerPhone,
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -562,7 +641,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.addressDetails,
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -579,7 +658,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
             child: Text(
               widget.orderProduct.deliveryType!,
               style: textColor3.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: reguler,
               ),
             ),
@@ -597,7 +676,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
               child: DropdownButton(
                 hint: Text("Select Delivery Status"),
                 style: textColor3.copyWith(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: reguler,
                 ),
                 items: orderProductProvider.deliveryStatuses
@@ -629,7 +708,7 @@ class _EditOrderProductState extends State<EditOrderProduct> {
                       child: Text(
                         "Edit Order Product",
                         style: textColor3.copyWith(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: bold,
                         ),
                       ),
@@ -646,7 +725,9 @@ class _EditOrderProductState extends State<EditOrderProduct> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: SingleChildScrollView(
-              child: widget.roleId == 1 ? editFormAdmin() : editFormKurir(),
+              child: widget.roleId == 1 || widget.roleId == 4
+                  ? editFormAdminMember()
+                  : editFormKurir(),
             ),
           ));
     }

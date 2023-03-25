@@ -6,6 +6,7 @@ import 'package:furniture/screens/login_screen.dart';
 import 'package:furniture/services/auth_service.dart';
 import 'package:furniture/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeKurirScreen extends StatefulWidget {
   const HomeKurirScreen({super.key});
@@ -17,15 +18,26 @@ class HomeKurirScreen extends StatefulWidget {
 class _HomeKurirScreenState extends State<HomeKurirScreen> {
   String name = '';
   String role = '';
+  // String token = '';
   @override
   void initState() {
     super.initState();
     Provider.of<ProductProvider>(context, listen: false).fetchProduct();
+    loadInfoUser();
   }
 
   loadInfoUser() async {
     name = await getName();
     role = await getRole();
+    // token = await getToken();
+    // final Map<String, dynamic> decodedToken =
+    //     await AuthService.getDecodedToken(token);
+
+    // print("decodedToken : " + decodedToken.toString());
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.setString('id', decodedToken['id'].toString());
+    // prefs.setString('role_id', decodedToken['role_id'].toString());
+    // prefs.setString('name', decodedToken['name'].toString());
   }
 
   @override

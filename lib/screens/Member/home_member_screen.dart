@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
-
 import 'package:furniture/providers/product_provider.dart';
-import 'package:furniture/providers/search_provider.dart';
-import 'package:furniture/services/storage_service.dart';
-import 'package:furniture/widgets/card_product_widget.dart';
 import 'package:furniture/screens/login_screen.dart';
 import 'package:furniture/services/auth_service.dart';
-
+import 'package:furniture/services/storage_service.dart';
 import 'package:furniture/theme.dart';
+import 'package:furniture/widgets/card_product_widget.dart';
 import 'package:provider/provider.dart';
 
-class HomeAdminScreen extends StatefulWidget {
-  const HomeAdminScreen({super.key});
+class HomeMemberScreen extends StatefulWidget {
+  const HomeMemberScreen({super.key});
 
   @override
-  State<HomeAdminScreen> createState() => _HomeAdminScreenState();
+  State<HomeMemberScreen> createState() => _HomeMemberScreenState();
 }
 
-class _HomeAdminScreenState extends State<HomeAdminScreen> {
-  TextEditingController searchTextController = TextEditingController(text: '');
+class _HomeMemberScreenState extends State<HomeMemberScreen> {
   String name = '';
   String role = '';
   @override
@@ -26,8 +22,6 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
     super.initState();
     Provider.of<ProductProvider>(context, listen: false).fetchProduct();
     loadInfoUser();
-    // Provider.of<CategoryProvider>(context, listen: false).geCategorys();
-    // Provider.of<BrandProvider>(context, listen: false).getBrands();
   }
 
   loadInfoUser() async {
@@ -38,12 +32,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
   @override
   Widget build(BuildContext context) {
     ProductProvider productProvider = Provider.of<ProductProvider>(context);
-    // final searchProvider = Provider.of<SearchProvider>(context);
-
-    print('jumbalh product: ${productProvider.products.length}');
-    print(role);
-
-    Widget headerAdmin() {
+    Widget headerScreen() {
       return Padding(
         padding: EdgeInsets.all(24),
         child: Column(
@@ -75,8 +64,8 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                     Text(
                       role == ''
                           ? 'Role'
-                          : role == '1'
-                              ? 'Admin'
+                          : role == '4'
+                              ? 'Member'
                               : 'Role Unknown',
                       style: textColor1.copyWith(
                         fontSize: 16,
@@ -85,7 +74,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                     )
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
                   onPressed: () => AuthService().logout().then(
                         (value) => Navigator.of(context).pushAndRemoveUntil(
@@ -218,7 +207,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            headerAdmin(),
+            headerScreen(),
             conten(),
           ],
         ),

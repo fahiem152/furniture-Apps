@@ -4,7 +4,7 @@ import 'package:furniture/screens/Admin/OrderProduct/order_admin_screen.dart';
 import 'package:furniture/services/storage_service.dart';
 import 'package:furniture/theme.dart';
 import 'package:furniture/widgets/card_order_widget.dart';
-import 'package:furniture/widgets/order_admin_screen.dart';
+
 import 'package:provider/provider.dart';
 
 class DeliverKurirScreen extends StatefulWidget {
