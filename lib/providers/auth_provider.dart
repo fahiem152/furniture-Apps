@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furniture/models/api_respone_model.dart';
 import 'package:furniture/models/login_respone.dart';
 import 'package:furniture/services/auth_service.dart';
 
@@ -12,16 +13,13 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<LoginResponeModel> login(
-    String email,
-    String password,
-    int roleId,
-  ) async {
-    final loginResponse = await _authService.login(email, password, roleId);
+  Future<ApiResponse> login({
+    required String email,
+    required String password,
+    required int roleId,
+  }) async {
+    final loginResponse = await _authService.login(
+        email: email, password: password, roleId: roleId);
     return loginResponse;
-  }
-
-  Future<void> logout() async {
-    notifyListeners();
   }
 }

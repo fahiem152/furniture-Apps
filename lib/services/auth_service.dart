@@ -7,56 +7,57 @@ import 'package:http/http.dart' as http;
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/api_respone_model.dart';
+
 class AuthService {
   final String _baseUrl = '$baseUrl/api/login';
 
-  Future<LoginResponeModel> login(
-    String email,
-    String password,
-    int roleId,
-  ) async {
-    // LoginResponeModel loginResponse = LoginResponeModel(
-    //   token: '',
-    //   error: '',
-    // );
+  Future<ApiResponse> login({
+    required String email,
+    required String password,
+    required int roleId,
+  }) async {
+    ApiResponse apiResponse = ApiResponse();
     try {
       final response = await http.post(
         Uri.parse(
           _baseUrl,
         ),
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
         body: {
           'email': email,
           'password': password,
           'role_id': "$roleId",
         },
       );
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body)['data'];
-        final loginResponse = LoginResponeModel.fromJson(jsonData);
-
-        // save token to shared preferences
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', loginResponse.token!);
-
-        print(prefs.getString('token'));
-        return loginResponse;
-      } else if (response.statusCode == 401) {
-        throw Exception('Invalid email or password');
-        // final jsonData = json.decode(response.body);
-        // final loginResponse = LoginResponeModel.fromJson(jsonData['error']);
-        // return loginResponse.error == null
-        //     ? LoginResponeModel(error: 'Something went wrong')
-        //     : loginResponse;
-      } else {
-        throw Exception('Something went wrong');
+      switch (response.statusCode) {
+        case 200:
+          final jsonData = json.decode(response.body)['data'];
+          final loginResponse = LoginResponeModel.fromJson(jsonData);
+          apiResponse.data = loginResponse;
+          // save token to shared preferences
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('token', loginResponse.token!);
+          print(prefs.getString('token'));
+          // return apiResponse;
+          break;
+        case 401:
+          apiResponse.error = jsonDecode(response.body)['error'];
+          // return apiResponse;
+          break;
+        case 404:
+          apiResponse.error = jsonDecode(response.body)['error'];
+          break;
+        case 400:
+          apiResponse.error = jsonDecode(response.body)['message'];
+          break;
+        default:
+          apiResponse.error = somethingWhentWrong;
+          break;
       }
     } catch (e) {
-      print(e);
-      throw Exception(e);
+      apiResponse.error = 'Server Error';
     }
+    return apiResponse;
   }
 
   Future<bool> logout() async {

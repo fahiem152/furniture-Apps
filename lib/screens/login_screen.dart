@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furniture/models/api_respone_model.dart';
 
 import 'package:furniture/providers/auth_provider.dart';
 import 'package:furniture/providers/role_provider.dart';
@@ -20,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
 
   bool isPasswordVisible = false;
-  bool isLoading = false;
   showAlertDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
       content: Row(
@@ -49,70 +49,73 @@ class _LoginScreenState extends State<LoginScreen> {
     Provider.of<RoleProvider>(context, listen: false).fetchRole();
   }
 
-  // var valueRole;
-
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    handleLogin() async {
-      setState(() {
-        isLoading = true;
-      });
+    void functionLoginUser() async {
       showAlertDialog(context);
-      if (_key.currentState!.validate()) {
-        final loginResponse = await authProvider.login(
-          emailController.text,
-          passwordController.text,
-          authProvider.valueRole!,
-        );
-        if (loginResponse != null) {
-          await saveInfoUser();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Login Success'),
-            ),
-          );
-          if (authProvider.valueRole == 1) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/admin', (route) => false);
-          } else if (authProvider.valueRole == 2) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/kurir', (route) => false);
-          } else if (authProvider.valueRole == 3) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/owner', (route) => false);
-          } else if (authProvider.valueRole == 4) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/member', (route) => false);
-          }
-          authProvider.setValueRole(null);
-
-          // Navigator.pushNamedAndRemoveUntil(
-          //     context, '/admin', (route) => false);
-        } else {
-          setState(() {
-            isLoading = false;
-          });
-
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('${loginResponse.error}')));
-        }
-      } else {
+      if (authProvider.valueRole == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Invalid Input'),
+            content: const Text('Please Select Role'),
           ),
         );
-        // Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        if (_key.currentState!.validate()) {
+          ApiResponse loginResponse = await authProvider.login(
+            email: emailController.text,
+            password: passwordController.text,
+            roleId: authProvider.valueRole!,
+          );
+          if (loginResponse.error == null) {
+            await saveInfoUser();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Login Success'),
+              ),
+            );
+            if (authProvider.valueRole == 1) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/admin', (route) => false);
+            } else if (authProvider.valueRole == 2) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/kurir', (route) => false);
+            } else if (authProvider.valueRole == 3) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/owner', (route) => false);
+            } else if (authProvider.valueRole == 4) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/member', (route) => false);
+            }
+            authProvider.setValueRole(null);
+            // if (authProvider.valueRole == 1) {
+            //   Navigator.pushNamedAndRemoveUntil(
+            //       context, '/admin', (route) => false);
+            // } else if (authProvider.valueRole == 2) {
+            //   Navigator.pushNamedAndRemoveUntil(context, '/user', (route) => false);
+            // }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${loginResponse.error}'),
+              ),
+            );
+            Navigator.pop(context);
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Email dan Password tidak boleh kosong'),
+            ),
+          );
+          Navigator.pop(context);
+          // Navigator.pop(context);
+        }
       }
-      setState(() {
-        isLoading = false;
-      });
     }
 
     final roleList = Provider.of<RoleProvider>(context).roles;
-    // var selectedRole = Provider.of<RoleProvider>(context).selectedRole;
 
     print('Jumlah Roles: ${roleList.length}');
     return Scaffold(
@@ -317,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 40,
                         ),
                         GestureDetector(
-                          onTap: handleLogin,
+                          onTap: functionLoginUser,
                           child: Container(
                             height: 50,
                             decoration: BoxDecoration(

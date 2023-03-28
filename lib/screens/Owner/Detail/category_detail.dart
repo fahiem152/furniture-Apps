@@ -18,8 +18,7 @@ class CategoryDetail extends StatefulWidget {
 class _CategoryDetailState extends State<CategoryDetail> {
   late DateTime startDate;
   late DateTime endDate;
-  // DateTime startDate = DateTime.now().subtract(const Duration(days: 7));
-  // DateTime endDate = DateTime.now();
+
   late int categoryId;
   TextEditingController tanggal = TextEditingController();
   final String datenow = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -29,25 +28,18 @@ class _CategoryDetailState extends State<CategoryDetail> {
     super.initState();
     endDate = DateTime.now();
     startDate = DateTime.now().subtract(const Duration(days: 7));
-    // categoryId = 0;
+
     categoryId = 0;
-    // endDate = DateTime.now();
-    // startDate = DateTime.now().subtract(const Duration(days: 7));
-    // CategoryProvider categoryProvider = Provider.of<CategoryProvider>(context);
-    // categoryProvider.setValueCategory(0);
-    // Provider.of<CategoryProvider>(context, listen: false).fetchCategory();
+
     _getData();
   }
 
   _getData() async {
-    // CategoryProvider categoryProvider = Provider.of<CategoryProvider>(context);
-
     await Provider.of<ChartProvider>(context, listen: false)
         .fetchChartOrderCategories(
       startDate: startDate.toString(),
       endDate: endDate.toString(),
       categoryId: categoryId,
-      // categoryId: categoryProvider.valueCategory!,
     );
     await Provider.of<CategoryProvider>(context, listen: false).fetchCategory();
   }
@@ -65,14 +57,11 @@ class _CategoryDetailState extends State<CategoryDetail> {
         startDate = newDateRange.start;
         endDate = newDateRange.end;
       });
-      // _getData();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final dataChartCategoryModel =
-    //     Provider.of<ChartProvider>(context).chartCategoryModel;
     ChartProvider chartProvider = Provider.of<ChartProvider>(context);
     CategoryProvider categoryProvider = Provider.of<CategoryProvider>(context);
     print(' Category List : ${categoryProvider.categorys}');
@@ -83,31 +72,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
       ),
       ...categoryProvider.categorys,
     ];
-    // print('categories baru ${_categories[2].id} + ${_categories[2].name}');
-
-    // print('ini adalah Category Data: ${categoryProvider.valueCategory}');
-    // print('ini adalah Chart Data: $dataChartCategoryModel');
+    // print('categories baru ${_categories / [2].id} + ${_categories[2].name}');
     return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: color5,
-        //   centerTitle: true,
-        //   leading: IconButton(
-        //     icon: Icon(
-        //       Icons.arrow_back_ios_new_outlined,
-        //       color: color1,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   title: Text(
-        //     "Statistik Order By Category",
-        //     style: textColor1.copyWith(
-        //       fontSize: 18,
-        //       fontWeight: semiBold,
-        //     ),
-        //   ),
-        // ),
         body: SafeArea(
       child: Column(
         children: [
@@ -136,54 +102,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                           categoryId = newValue!;
                         });
                         print('category seteleh select: $categoryId');
-                        // if (newValue != null &&
-                        //     startDate != null &&
-                        //     endDate != null) {
-                        //   _getData();
-                        // } else {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(
-                        //       content: Text(
-                        //         'Please Select Category and Date',
-                        //         style: textColor1.copyWith(
-                        //           fontSize: 12,
-                        //           fontWeight: reguler,
-                        //         ),
-                        //       ),
-                        //       backgroundColor: color5,
-                        //     ),
-                        //   );
-                        // }
-                        // categoryProvider.setValueCategory(
-                        //   int.parse(
-                        //     newValue.toString(),
-                        //   ),
-                        // );
-                        // print(
-                        //     'category newValue: ${categoryProvider.valueCategory}');
-                        // if (categoryProvider.valueCategory != null &&
-                        //     startDate != null &&
-                        //     endDate != null) {
-                        //   _getData();
-                        // } else {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(
-                        //       content: Text(
-                        //         'Please Select Category and Date',
-                        //         style: textColor1.copyWith(
-                        //           fontSize: 12,
-                        //           fontWeight: reguler,
-                        //         ),
-                        //       ),
-                        //       backgroundColor: color5,
-                        //     ),
-                        //   );
-                        // }
                       },
-                      value: categoryId
-                      // value: categoryProvider.valueCategory!,
-                      // setState(() {});
-                      ),
+                      value: categoryId),
                 ),
                 GestureDetector(
                   onTap: () async {
@@ -215,7 +135,6 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 ),
                 InkWell(
                   onTap: () async {
-                    // await _getData();
                     print('category: ${categoryId}');
                     print('startDate: ${startDate}');
                     print('endDate: ${endDate}');
@@ -260,12 +179,10 @@ class _CategoryDetailState extends State<CategoryDetail> {
             ),
           ),
           Container(
-            // padding: EdgeInsets.all(12),
             margin: EdgeInsets.symmetric(
               horizontal: 12,
               vertical: 16,
             ),
-
             width: double.infinity,
             decoration: BoxDecoration(
               color: color1,
@@ -361,7 +278,6 @@ class _CategoryDetailState extends State<CategoryDetail> {
                       )
                     : categoryId == 0
                         ? SfCircularChart(
-                            // title: ChartTitle(text: 'Sales by sales person'),
                             legend: Legend(isVisible: true),
                             series: <
                                 PieSeries<ChartOrderCategoriesModel, String>>[
@@ -372,22 +288,11 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 xValueMapper:
                                     (ChartOrderCategoriesModel data, _) =>
                                         data.name,
-                                // categoryId == 0
-                                //     ? data.name
-                                //     : data.productId.toString(),
-                                // xValueMapper:
-                                //     (ChartOrderCategoriesModel data, _) =>
-                                //         data.name,
                                 yValueMapper:
                                     (ChartOrderCategoriesModel data, _) =>
-                                        // data.quantity,
                                         data.quantity,
-                                // categoryId == 0
-                                //     ? data.quantity
-                                //     : data.quantity,
                                 dataLabelMapper:
                                     (ChartOrderCategoriesModel data, _) =>
-                                        // '100%',
                                         data.persen! + '%',
                                 dataLabelSettings: DataLabelSettings(
                                   textStyle: textColor3.copyWith(
@@ -399,7 +304,6 @@ class _CategoryDetailState extends State<CategoryDetail> {
                             ],
                           )
                         : SfCircularChart(
-                            // title: ChartTitle(text: 'Sales by sales person'),
                             legend: Legend(isVisible: true),
                             series: <
                                 PieSeries<ChartOrderCategoriesModel, String>>[
@@ -410,23 +314,12 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 xValueMapper:
                                     (ChartOrderCategoriesModel data, _) =>
                                         data.productId.toString(),
-                                // categoryId == 0
-                                //     ? data.name
-                                //     : data.productId.toString(),
-                                // xValueMapper:
-                                //     (ChartOrderCategoriesModel data, _) =>
-                                //         data.name,
                                 yValueMapper:
                                     (ChartOrderCategoriesModel data, _) =>
-                                        // data.quantity,
                                         data.quantity,
-                                // categoryId == 0
-                                //     ? data.quantity
-                                //     : data.quantity,
                                 dataLabelMapper:
                                     (ChartOrderCategoriesModel data, _) =>
                                         '100%',
-                                // data.persen! + '%',
                                 dataLabelSettings: DataLabelSettings(
                                   textStyle: textColor3.copyWith(
                                     fontSize: 14,
